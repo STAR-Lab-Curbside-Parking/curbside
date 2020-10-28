@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 10/11/20 01:26:12 by Eclipse SUMO netedit Version 1.1.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="C:\Program%20Files%20(x86)\Eclipse\Sumo\doc\examples\sumo\angled_roadside_parking\net.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="C:\Program%20Files%20(x86)\Eclipse\Sumo\doc\examples\sumo\angled_roadside_parking\net.net.xml"/>
+        <output.street-names value="true"/>
+    </output>
+
+    <processing>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+    </processing>
+
+    <junctions>
+        <no-internal-links value="true"/>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="0"/>
+        <junctions.limit-turn-speed value="-1"/>
+        <rectangular-lane-cut value="false"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+</configuration>
+-->
+
+<net version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="-362563.54,-4832311.19" convBoundary="612.96,382.54,840.37,383.35" origBoundary="13.296064,43.631354,13.321826,43.642858" projParameter="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"/>
+
+    <edge id="-a" from="14" to="12" name="Via Montespirello" priority="60" type="strada.doppiosenso.50">
+        <lane id="-a_0" index="0" speed="13.89" length="135.22" shape="747.90,384.14,51.00 612.96,384.30,57.00"/>
+    </edge>
+    <edge id="-b" from="gneJ0" to="14" priority="-1">
+        <lane id="-b_0" index="0" speed="13.89" length="105.49" shape="840.36,384.95 748.18,384.14,51.00"/>
+    </edge>
+    <edge id="a" from="12" to="14" name="Via Montespirello" priority="60" type="strada.doppiosenso.50">
+        <lane id="a_0" index="0" speed="13.89" length="135.22" shape="612.96,381.10,57.00 747.90,380.94,51.00"/>
+    </edge>
+    <edge id="b" from="14" to="gneJ0" priority="-1">
+        <lane id="b_0" index="0" speed="13.89" length="105.49" shape="748.21,380.94,51.00 840.38,381.75"/>
+    </edge>
+
+    <junction id="12" type="priority" x="612.96" y="382.70" z="57.00" incLanes="-a_0" intLanes="" shape="612.96,382.70,57.00 612.96,385.90,57.00 612.96,382.70,57.00">
+        <request index="0" response="0" foes="0"/>
+    </junction>
+    <junction id="14" type="priority" x="748.05" y="382.54" z="51.00" incLanes="-b_0 a_0" intLanes="" shape="748.17,385.74,51.00 748.23,379.34,51.00 747.90,379.34,51.00 747.91,385.74,51.00">
+        <request index="0" response="00" foes="00"/>
+        <request index="1" response="00" foes="00"/>
+    </junction>
+    <junction id="gneJ0" type="dead_end" x="840.37" y="383.35" incLanes="b_0" intLanes="" shape="840.37,383.35 840.40,380.15 840.37,383.35"/>
+
+    <connection from="-a" to="a" fromLane="0" toLane="0" dir="t" state="M"/>
+    <connection from="-b" to="-a" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from="a" to="b" fromLane="0" toLane="0" dir="s" state="M"/>
+
+</net>

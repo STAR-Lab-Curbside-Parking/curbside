@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <location netOffset="-362563.54,-4832311.19" convBoundary="0.00,0.00,2064.54,1284.45" origBoundary="13.296064,43.631354,13.321826,43.642858" projParameter="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"/>
+
+	<parkingArea id="ParkAreaA" lane="a_0" startPos="20" endPos="25" roadsideCapacity="1" angle="0" length="5"/>
+	<parkingArea id="ParkAreaA1" lane="a_0" startPos="35" endPos="40" roadsideCapacity="1" angle="0" length="5"/>
+	<parkingArea id="ParkAreaA2" lane="a_0" startPos="50" endPos="55" roadsideCapacity="1" angle="0" length="5"/>
+	<parkingArea id="ParkAreaA3" lane="a_0" startPos="5" endPos="10" roadsideCapacity="1" angle="0" length="5"/>
+
+	
+	<!-- <rerouter id="rerouter1" edges="a b" probability="1">
+      <interval begin="0" end="200">
+         <parkingAreaReroute id="ParkAreaA"/>
+         <parkingAreaReroute id="ParkAreaA3"/>
+      </interval>
+    </rerouter> -->
+
+</additional>
