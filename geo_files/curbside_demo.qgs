@@ -1,0 +1,860 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis projectname="" version="3.0.0-Girona">
+  <title></title>
+  <autotransaction active="0"/>
+  <evaluateDefaultValues active="0"/>
+  <trust active="0"/>
+  <projectCrs>
+    <spatialrefsys>
+      <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+      <srsid>3452</srsid>
+      <srid>4326</srid>
+      <authid>EPSG:4326</authid>
+      <description>WGS 84</description>
+      <projectionacronym>longlat</projectionacronym>
+      <ellipsoidacronym>WGS84</ellipsoidacronym>
+      <geographicflag>true</geographicflag>
+    </spatialrefsys>
+  </projectCrs>
+  <layer-tree-group>
+    <customproperties/>
+    <layer-tree-layer providerKey="ogr" source="./OSM_road_demo.geojson" expanded="1" id="OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb" name="OSM_road_demo" checked="Qt::Checked">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer providerKey="ogr" source="./ParkingConfiguration_demo.geojson" expanded="1" id="ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19" name="ParkingConfiguration_demo" checked="Qt::Checked">
+      <customproperties/>
+    </layer-tree-layer>
+    <custom-order enabled="0">
+      <item>ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19</item>
+      <item>OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb</item>
+    </custom-order>
+  </layer-tree-group>
+  <snapping-settings mode="2" enabled="0" type="1" intersection-snapping="0" tolerance="12" unit="1">
+    <individual-layer-settings>
+      <layer-setting enabled="0" type="1" tolerance="12" id="OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb" units="1"/>
+      <layer-setting enabled="0" type="1" tolerance="12" id="ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19" units="1"/>
+    </individual-layer-settings>
+  </snapping-settings>
+  <relations/>
+  <mapcanvas annotationsVisible="1" name="theMapCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>-122.35182722037990288</xmin>
+      <ymin>47.61313217002479803</ymin>
+      <xmax>-122.34544621099894357</xmax>
+      <ymax>47.61749805576548056</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <legend updateDrawingOrder="true">
+    <legendlayer drawingOrder="-1" showFeatureCount="0" name="OSM_road_demo" checked="Qt::Checked" open="true">
+      <filegroup hidden="false" open="true">
+        <legendlayerfile visible="1" layerid="OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb" isInOverview="0"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer drawingOrder="-1" showFeatureCount="0" name="ParkingConfiguration_demo" checked="Qt::Checked" open="true">
+      <filegroup hidden="false" open="true">
+        <legendlayerfile visible="1" layerid="ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19" isInOverview="0"/>
+      </filegroup>
+    </legendlayer>
+  </legend>
+  <mapViewDocks/>
+  <mapViewDocks3D/>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <mapcanvas annotationsVisible="1" name="mAreaCanvas">
+    <units>degrees</units>
+    <extent>
+      <xmin>0</xmin>
+      <ymin>0</ymin>
+      <xmax>0</xmax>
+      <ymax>0</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+        <srsid>3452</srsid>
+        <srid>4326</srid>
+        <authid>EPSG:4326</authid>
+        <description>WGS 84</description>
+        <projectionacronym>longlat</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>true</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+  </mapcanvas>
+  <projectlayers>
+    <maplayer refreshOnNotifyMessage="" labelsEnabled="0" type="vector" readOnly="0" simplifyDrawingTol="1" minScale="1e+8" hasScaleBasedVisibilityFlag="0" autoRefreshEnabled="0" simplifyAlgorithm="0" autoRefreshTime="0" simplifyDrawingHints="1" simplifyLocal="1" maxScale="0" geometry="Line" simplifyMaxScale="1" refreshOnNotifyEnabled="0">
+      <extent>
+        <xmin>-122.35236193710150587</xmin>
+        <ymin>47.61278705681620949</ymin>
+        <xmax>-122.34484414437888233</xmax>
+        <ymax>47.61774214794770188</ymax>
+      </extent>
+      <id>OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb</id>
+      <datasource>./OSM_road_demo.geojson</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>OSM_road_demo</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent>
+          <spatial minz="0" crs="" miny="0" maxz="0" dimensions="2" minx="0" maxy="0" maxx="0"/>
+          <temporal>
+            <period>
+              <start></start>
+              <end></end>
+            </period>
+          </temporal>
+        </extent>
+        <contact>
+          <name></name>
+          <organization></organization>
+          <position></position>
+          <voice></voice>
+          <fax></fax>
+          <email></email>
+          <role></role>
+        </contact>
+        <links/>
+      </resourceMetadata>
+      <provider encoding="UTF-8">ogr</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <dataDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <auxiliaryLayer/>
+      <renderer-v2 type="singleSymbol" enableorderby="0" symbollevels="0" forceraster="0">
+        <symbols>
+          <symbol alpha="1" type="line" name="0" clip_to_extent="1">
+            <layer enabled="1" pass="0" locked="1" class="SimpleLine">
+              <prop v="round" k="capstyle"/>
+              <prop v="5;2" k="customdash"/>
+              <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+              <prop v="MM" k="customdash_unit"/>
+              <prop v="0" k="draw_inside_polygon"/>
+              <prop v="round" k="joinstyle"/>
+              <prop v="0,0,0,255" k="line_color"/>
+              <prop v="solid" k="line_style"/>
+              <prop v="1.06" k="line_width"/>
+              <prop v="MM" k="line_width_unit"/>
+              <prop v="0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="0" k="use_custom_dash"/>
+              <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" value="" name="name"/>
+                  <Option name="properties"/>
+                  <Option type="QString" value="collection" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+            <layer enabled="1" pass="0" locked="0" class="SimpleLine">
+              <prop v="round" k="capstyle"/>
+              <prop v="5;2" k="customdash"/>
+              <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+              <prop v="MM" k="customdash_unit"/>
+              <prop v="0" k="draw_inside_polygon"/>
+              <prop v="round" k="joinstyle"/>
+              <prop v="255,255,255,255" k="line_color"/>
+              <prop v="solid" k="line_style"/>
+              <prop v="0.86" k="line_width"/>
+              <prop v="MM" k="line_width_unit"/>
+              <prop v="0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="0" k="use_custom_dash"/>
+              <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" value="" name="name"/>
+                  <Option name="properties"/>
+                  <Option type="QString" value="collection" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale/>
+      </renderer-v2>
+      <customproperties>
+        <property value="0" key="embeddedWidgets/count"/>
+        <property key="variableNames"/>
+        <property key="variableValues"/>
+      </customproperties>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerOpacity>1</layerOpacity>
+      <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
+        <DiagramCategory barWidth="5" maxScaleDenominator="1e+8" backgroundAlpha="255" minimumSize="0" minScaleDenominator="0" scaleBasedVisibility="0" height="15" penAlpha="255" lineSizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" penWidth="0" opacity="1" penColor="#000000" scaleDependency="Area" rotationOffset="270" enabled="0" width="15" sizeScale="3x:0,0,0,0,0,0" sizeType="MM" labelPlacementMethod="XHeight" diagramOrientation="Up" backgroundColor="#ffffff">
+          <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+        </DiagramCategory>
+      </SingleCategoryDiagramRenderer>
+      <DiagramLayerSettings dist="0" priority="0" zIndex="0" placement="2" showAll="1" linePlacementFlags="18" obstacle="0">
+        <properties>
+          <Option type="Map">
+            <Option type="QString" value="" name="name"/>
+            <Option name="properties"/>
+            <Option type="QString" value="collection" name="type"/>
+          </Option>
+        </properties>
+      </DiagramLayerSettings>
+      <fieldConfiguration>
+        <field name="element">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="id">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="name">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+      </fieldConfiguration>
+      <aliases>
+        <alias index="0" name="" field="element"/>
+        <alias index="1" name="" field="id"/>
+        <alias index="2" name="" field="name"/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <defaults>
+        <default expression="" applyOnUpdate="0" field="element"/>
+        <default expression="" applyOnUpdate="0" field="id"/>
+        <default expression="" applyOnUpdate="0" field="name"/>
+      </defaults>
+      <constraints>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="element" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="id" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="name" unique_strength="0"/>
+      </constraints>
+      <constraintExpressions>
+        <constraint desc="" field="element" exp=""/>
+        <constraint desc="" field="id" exp=""/>
+        <constraint desc="" field="name" exp=""/>
+      </constraintExpressions>
+      <attributeactions>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+      </attributeactions>
+      <attributetableconfig actionWidgetStyle="dropDown" sortOrder="0" sortExpression="">
+        <columns>
+          <column type="field" hidden="0" width="-1" name="element"/>
+          <column type="field" hidden="0" width="-1" name="id"/>
+          <column type="field" hidden="0" width="-1" name="name"/>
+          <column type="actions" hidden="1" width="-1"/>
+        </columns>
+      </attributetableconfig>
+      <editform></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
+"""
+QGIS forms can have a Python function that is called when the form is
+opened.
+
+Use this function to add extra logic to your forms.
+
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
+"""
+from qgis.PyQt.QtWidgets import QWidget
+
+def my_form_open(dialog, layer, feature):
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
+]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <editable>
+        <field editable="1" name="element"/>
+        <field editable="1" name="id"/>
+        <field editable="1" name="name"/>
+      </editable>
+      <labelOnTop>
+        <field name="element" labelOnTop="0"/>
+        <field name="id" labelOnTop="0"/>
+        <field name="name" labelOnTop="0"/>
+      </labelOnTop>
+      <widgets/>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <expressionfields/>
+      <previewExpression>id</previewExpression>
+      <mapTip></mapTip>
+    </maplayer>
+    <maplayer refreshOnNotifyMessage="" labelsEnabled="0" type="vector" readOnly="0" simplifyDrawingTol="1" minScale="1e+8" hasScaleBasedVisibilityFlag="0" autoRefreshEnabled="0" simplifyAlgorithm="0" autoRefreshTime="0" simplifyDrawingHints="1" simplifyLocal="1" maxScale="0" geometry="Line" simplifyMaxScale="1" refreshOnNotifyEnabled="0">
+      <extent>
+        <xmin>-122.35167529158511002</xmin>
+        <ymin>47.61323611968528979</ymin>
+        <xmax>-122.34559813979372223</xmax>
+        <ymax>47.61739410610498879</ymax>
+      </extent>
+      <id>ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19</id>
+      <datasource>./ParkingConfiguration_demo.geojson</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>ParkingConfiguration_demo</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <resourceMetadata>
+        <identifier></identifier>
+        <parentidentifier></parentidentifier>
+        <language></language>
+        <type></type>
+        <title></title>
+        <abstract></abstract>
+        <fees></fees>
+        <encoding></encoding>
+        <crs>
+          <spatialrefsys>
+            <proj4></proj4>
+            <srsid>0</srsid>
+            <srid>0</srid>
+            <authid></authid>
+            <description></description>
+            <projectionacronym></projectionacronym>
+            <ellipsoidacronym></ellipsoidacronym>
+            <geographicflag>false</geographicflag>
+          </spatialrefsys>
+        </crs>
+        <extent>
+          <spatial minz="0" crs="" miny="0" maxz="0" dimensions="2" minx="0" maxy="0" maxx="0"/>
+          <temporal>
+            <period>
+              <start></start>
+              <end></end>
+            </period>
+          </temporal>
+        </extent>
+        <contact>
+          <name></name>
+          <organization></organization>
+          <position></position>
+          <voice></voice>
+          <fax></fax>
+          <email></email>
+          <role></role>
+        </contact>
+        <links/>
+      </resourceMetadata>
+      <provider encoding="UTF-8">ogr</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <dataDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="default">
+        <map-layer-style name="default"/>
+      </map-layer-style-manager>
+      <auxiliaryLayer/>
+      <renderer-v2 type="singleSymbol" enableorderby="0" symbollevels="0" forceraster="0">
+        <symbols>
+          <symbol alpha="1" type="line" name="0" clip_to_extent="1">
+            <layer enabled="1" pass="0" locked="0" class="SimpleLine">
+              <prop v="square" k="capstyle"/>
+              <prop v="5;2" k="customdash"/>
+              <prop v="3x:0,0,0,0,0,0" k="customdash_map_unit_scale"/>
+              <prop v="MM" k="customdash_unit"/>
+              <prop v="0" k="draw_inside_polygon"/>
+              <prop v="bevel" k="joinstyle"/>
+              <prop v="72,123,182,255" k="line_color"/>
+              <prop v="solid" k="line_style"/>
+              <prop v="0.66" k="line_width"/>
+              <prop v="MM" k="line_width_unit"/>
+              <prop v="0" k="offset"/>
+              <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+              <prop v="MM" k="offset_unit"/>
+              <prop v="0" k="use_custom_dash"/>
+              <prop v="3x:0,0,0,0,0,0" k="width_map_unit_scale"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" value="" name="name"/>
+                  <Option name="properties"/>
+                  <Option type="QString" value="collection" name="type"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </symbols>
+        <rotation/>
+        <sizescale/>
+      </renderer-v2>
+      <customproperties>
+        <property value="0" key="embeddedWidgets/count"/>
+        <property key="variableNames"/>
+        <property key="variableValues"/>
+      </customproperties>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerOpacity>1</layerOpacity>
+      <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
+        <DiagramCategory barWidth="5" maxScaleDenominator="1e+8" backgroundAlpha="255" minimumSize="0" minScaleDenominator="0" scaleBasedVisibility="0" height="15" penAlpha="255" lineSizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" penWidth="0" opacity="1" penColor="#000000" scaleDependency="Area" rotationOffset="270" enabled="0" width="15" sizeScale="3x:0,0,0,0,0,0" sizeType="MM" labelPlacementMethod="XHeight" diagramOrientation="Up" backgroundColor="#ffffff">
+          <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
+        </DiagramCategory>
+      </SingleCategoryDiagramRenderer>
+      <DiagramLayerSettings dist="0" priority="0" zIndex="0" placement="2" showAll="1" linePlacementFlags="18" obstacle="0">
+        <properties>
+          <Option type="Map">
+            <Option type="QString" value="" name="name"/>
+            <Option name="properties"/>
+            <Option type="QString" value="collection" name="type"/>
+          </Option>
+        </properties>
+      </DiagramLayerSettings>
+      <fieldConfiguration>
+        <field name="OBJECTID">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="BLOCKID">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="ROWNBR">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="BLOCK_ST">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="BLOCK_END">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="WIDTH_OFFS">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="GEOBASYS">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SPACELENGT">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SPACETYPE">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SPACETYPED">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="TIME_LIMIT">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SPACE_NB">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="CATEGORY">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SIDE">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="CURRENT_ST">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="ELMNTKEY">
+          <editWidget type="Range">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+        <field name="SHAPE_Leng">
+          <editWidget type="TextEdit">
+            <config>
+              <Option/>
+            </config>
+          </editWidget>
+        </field>
+      </fieldConfiguration>
+      <aliases>
+        <alias index="0" name="" field="OBJECTID"/>
+        <alias index="1" name="" field="BLOCKID"/>
+        <alias index="2" name="" field="ROWNBR"/>
+        <alias index="3" name="" field="BLOCK_ST"/>
+        <alias index="4" name="" field="BLOCK_END"/>
+        <alias index="5" name="" field="WIDTH_OFFS"/>
+        <alias index="6" name="" field="GEOBASYS"/>
+        <alias index="7" name="" field="SPACELENGT"/>
+        <alias index="8" name="" field="SPACETYPE"/>
+        <alias index="9" name="" field="SPACETYPED"/>
+        <alias index="10" name="" field="TIME_LIMIT"/>
+        <alias index="11" name="" field="SPACE_NB"/>
+        <alias index="12" name="" field="CATEGORY"/>
+        <alias index="13" name="" field="SIDE"/>
+        <alias index="14" name="" field="CURRENT_ST"/>
+        <alias index="15" name="" field="ELMNTKEY"/>
+        <alias index="16" name="" field="SHAPE_Leng"/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <defaults>
+        <default expression="" applyOnUpdate="0" field="OBJECTID"/>
+        <default expression="" applyOnUpdate="0" field="BLOCKID"/>
+        <default expression="" applyOnUpdate="0" field="ROWNBR"/>
+        <default expression="" applyOnUpdate="0" field="BLOCK_ST"/>
+        <default expression="" applyOnUpdate="0" field="BLOCK_END"/>
+        <default expression="" applyOnUpdate="0" field="WIDTH_OFFS"/>
+        <default expression="" applyOnUpdate="0" field="GEOBASYS"/>
+        <default expression="" applyOnUpdate="0" field="SPACELENGT"/>
+        <default expression="" applyOnUpdate="0" field="SPACETYPE"/>
+        <default expression="" applyOnUpdate="0" field="SPACETYPED"/>
+        <default expression="" applyOnUpdate="0" field="TIME_LIMIT"/>
+        <default expression="" applyOnUpdate="0" field="SPACE_NB"/>
+        <default expression="" applyOnUpdate="0" field="CATEGORY"/>
+        <default expression="" applyOnUpdate="0" field="SIDE"/>
+        <default expression="" applyOnUpdate="0" field="CURRENT_ST"/>
+        <default expression="" applyOnUpdate="0" field="ELMNTKEY"/>
+        <default expression="" applyOnUpdate="0" field="SHAPE_Leng"/>
+      </defaults>
+      <constraints>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="OBJECTID" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="BLOCKID" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="ROWNBR" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="BLOCK_ST" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="BLOCK_END" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="WIDTH_OFFS" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="GEOBASYS" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SPACELENGT" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SPACETYPE" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SPACETYPED" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="TIME_LIMIT" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SPACE_NB" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="CATEGORY" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SIDE" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="CURRENT_ST" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="ELMNTKEY" unique_strength="0"/>
+        <constraint notnull_strength="0" constraints="0" exp_strength="0" field="SHAPE_Leng" unique_strength="0"/>
+      </constraints>
+      <constraintExpressions>
+        <constraint desc="" field="OBJECTID" exp=""/>
+        <constraint desc="" field="BLOCKID" exp=""/>
+        <constraint desc="" field="ROWNBR" exp=""/>
+        <constraint desc="" field="BLOCK_ST" exp=""/>
+        <constraint desc="" field="BLOCK_END" exp=""/>
+        <constraint desc="" field="WIDTH_OFFS" exp=""/>
+        <constraint desc="" field="GEOBASYS" exp=""/>
+        <constraint desc="" field="SPACELENGT" exp=""/>
+        <constraint desc="" field="SPACETYPE" exp=""/>
+        <constraint desc="" field="SPACETYPED" exp=""/>
+        <constraint desc="" field="TIME_LIMIT" exp=""/>
+        <constraint desc="" field="SPACE_NB" exp=""/>
+        <constraint desc="" field="CATEGORY" exp=""/>
+        <constraint desc="" field="SIDE" exp=""/>
+        <constraint desc="" field="CURRENT_ST" exp=""/>
+        <constraint desc="" field="ELMNTKEY" exp=""/>
+        <constraint desc="" field="SHAPE_Leng" exp=""/>
+      </constraintExpressions>
+      <attributeactions>
+        <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
+      </attributeactions>
+      <attributetableconfig actionWidgetStyle="dropDown" sortOrder="0" sortExpression="">
+        <columns>
+          <column type="field" hidden="0" width="-1" name="OBJECTID"/>
+          <column type="field" hidden="0" width="-1" name="BLOCKID"/>
+          <column type="field" hidden="0" width="-1" name="ROWNBR"/>
+          <column type="field" hidden="0" width="-1" name="BLOCK_ST"/>
+          <column type="field" hidden="0" width="-1" name="BLOCK_END"/>
+          <column type="field" hidden="0" width="-1" name="WIDTH_OFFS"/>
+          <column type="field" hidden="0" width="-1" name="GEOBASYS"/>
+          <column type="field" hidden="0" width="-1" name="SPACELENGT"/>
+          <column type="field" hidden="0" width="-1" name="SPACETYPE"/>
+          <column type="field" hidden="0" width="-1" name="SPACETYPED"/>
+          <column type="field" hidden="0" width="-1" name="TIME_LIMIT"/>
+          <column type="field" hidden="0" width="-1" name="SPACE_NB"/>
+          <column type="field" hidden="0" width="-1" name="CATEGORY"/>
+          <column type="field" hidden="0" width="-1" name="SIDE"/>
+          <column type="field" hidden="0" width="-1" name="CURRENT_ST"/>
+          <column type="field" hidden="0" width="-1" name="ELMNTKEY"/>
+          <column type="field" hidden="0" width="-1" name="SHAPE_Leng"/>
+          <column type="actions" hidden="1" width="-1"/>
+        </columns>
+      </attributetableconfig>
+      <editform></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
+"""
+QGIS forms can have a Python function that is called when the form is
+opened.
+
+Use this function to add extra logic to your forms.
+
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
+"""
+from qgis.PyQt.QtWidgets import QWidget
+
+def my_form_open(dialog, layer, feature):
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
+]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <editable>
+        <field editable="1" name="BLOCKID"/>
+        <field editable="1" name="BLOCK_END"/>
+        <field editable="1" name="BLOCK_ST"/>
+        <field editable="1" name="CATEGORY"/>
+        <field editable="1" name="CURRENT_ST"/>
+        <field editable="1" name="ELMNTKEY"/>
+        <field editable="1" name="GEOBASYS"/>
+        <field editable="1" name="OBJECTID"/>
+        <field editable="1" name="ROWNBR"/>
+        <field editable="1" name="SHAPE_Leng"/>
+        <field editable="1" name="SIDE"/>
+        <field editable="1" name="SPACELENGT"/>
+        <field editable="1" name="SPACETYPE"/>
+        <field editable="1" name="SPACETYPED"/>
+        <field editable="1" name="SPACE_NB"/>
+        <field editable="1" name="TIME_LIMIT"/>
+        <field editable="1" name="WIDTH_OFFS"/>
+      </editable>
+      <labelOnTop>
+        <field name="BLOCKID" labelOnTop="0"/>
+        <field name="BLOCK_END" labelOnTop="0"/>
+        <field name="BLOCK_ST" labelOnTop="0"/>
+        <field name="CATEGORY" labelOnTop="0"/>
+        <field name="CURRENT_ST" labelOnTop="0"/>
+        <field name="ELMNTKEY" labelOnTop="0"/>
+        <field name="GEOBASYS" labelOnTop="0"/>
+        <field name="OBJECTID" labelOnTop="0"/>
+        <field name="ROWNBR" labelOnTop="0"/>
+        <field name="SHAPE_Leng" labelOnTop="0"/>
+        <field name="SIDE" labelOnTop="0"/>
+        <field name="SPACELENGT" labelOnTop="0"/>
+        <field name="SPACETYPE" labelOnTop="0"/>
+        <field name="SPACETYPED" labelOnTop="0"/>
+        <field name="SPACE_NB" labelOnTop="0"/>
+        <field name="TIME_LIMIT" labelOnTop="0"/>
+        <field name="WIDTH_OFFS" labelOnTop="0"/>
+      </labelOnTop>
+      <widgets/>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <expressionfields/>
+      <previewExpression>OBJECTID</previewExpression>
+      <mapTip></mapTip>
+    </maplayer>
+  </projectlayers>
+  <layerorder>
+    <layer id="ParkingConfiguration_demo_d331be6b_07d4_4dda_bf30_559281b9ff19"/>
+    <layer id="OSM_road_demo_0ed8032a_dbab_4741_9247_87956d37efcb"/>
+  </layerorder>
+  <properties>
+    <SpatialRefSys>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <Measure>
+      <Ellipsoid type="QString">WGS84</Ellipsoid>
+    </Measure>
+    <Gui>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+      <CanvasColorRedPart type="int">255</CanvasColorRedPart>
+      <SelectionColorGreenPart type="int">26</SelectionColorGreenPart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
+      <SelectionColorBluePart type="int">28</SelectionColorBluePart>
+      <SelectionColorRedPart type="int">227</SelectionColorRedPart>
+      <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
+    </Gui>
+    <Measurement>
+      <DistanceUnits type="QString">meters</DistanceUnits>
+      <AreaUnits type="QString">m2</AreaUnits>
+    </Measurement>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
+    <PositionPrecision>
+      <DecimalPlaces type="int">2</DecimalPlaces>
+      <Automatic type="bool">true</Automatic>
+    </PositionPrecision>
+  </properties>
+  <visibility-presets/>
+  <transformContext/>
+  <Annotations/>
+  <Layouts/>
+</qgis>
