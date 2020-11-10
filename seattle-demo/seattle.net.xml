@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Mon Nov  9 17:15:24 2020 by Eclipse SUMO netedit Version 1.7.0
+<!-- generated on Mon Nov  9 22:11:06 2020 by Eclipse SUMO netedit Version 1.7.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
 
     <input>
-        <sumo-net-file value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/sea_net.net.xml"/>
+        <sumo-net-file value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/seattle.net.xml"/>
     </input>
 
     <output>
-        <output-file value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/sea_net.net.xml"/>
+        <output-file value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/seattle.net.xml"/>
     </output>
 
     <processing>
@@ -849,8 +849,8 @@
     <edge id="27-01-NE" from="01-27" to="02-27" priority="6" type="highway.tertiary" shape="710.02,1303.48 718.75,1313.82 742.59,1342.09 773.15,1378.35">
         <lane id="27-01-NE_0" index="0" disallow="tram rail_urban rail rail_electric rail_fast ship" speed="8.94" length="78.68" shape="717.98,1310.43 719.97,1312.79 743.81,1341.06 768.70,1370.58"/>
     </edge>
-    <edge id="27-01-SE" from="02-27" to="01-27" priority="6" type="highway.tertiary" shape="773.15,1378.35 742.59,1342.09 718.75,1313.82 710.02,1303.48">
-        <lane id="27-01-SE_0" index="0" disallow="tram rail_urban rail rail_electric rail_fast ship" speed="8.94" length="78.68" shape="766.25,1372.64 741.37,1343.12 717.53,1314.85 715.53,1312.49"/>
+    <edge id="27-01-SW" from="02-27" to="01-27" priority="6" type="highway.tertiary" shape="773.15,1378.35 742.59,1342.09 718.75,1313.82 710.02,1303.48">
+        <lane id="27-01-SW_0" index="0" disallow="tram rail_urban rail rail_electric rail_fast ship" speed="8.94" length="78.68" shape="766.25,1372.64 741.37,1343.12 717.53,1314.85 715.53,1312.49"/>
     </edge>
     <edge id="27-02-NE" from="02-27" to="03-27" priority="6" type="highway.tertiary" shape="773.15,1378.35 778.48,1384.71 805.25,1416.58 836.17,1453.40">
         <lane id="27-02-NE_0" index="0" disallow="tram rail_urban rail rail_electric rail_fast ship" speed="8.94" length="78.78" shape="780.03,1384.07 806.48,1415.55 830.69,1444.39"/>
@@ -985,7 +985,7 @@
         <request index="9"  response="00000000111" foes="00001100111" cont="1"/>
         <request index="10" response="00001000110" foes="00001000110" cont="1"/>
     </junction>
-    <junction id="01-27" type="traffic_light" x="710.02" y="1303.48" incLanes="27-01-SE_0 01-26-NW_0 01-26-NW_1 27-00-NE_0 01-27-SE_0 01-27-SE_1" intLanes=":01-27_0_0 :01-27_1_0 :01-27_18_0 :01-27_19_0 :01-27_4_0 :01-27_5_0 :01-27_5_1 :01-27_20_0 :01-27_21_0 :01-27_9_0 :01-27_10_0 :01-27_22_0 :01-27_23_0 :01-27_13_0 :01-27_14_0 :01-27_14_1 :01-27_24_0 :01-27_25_0" shape="714.31,1313.52 719.20,1309.39 718.09,1307.37 718.01,1306.40 718.25,1305.45 718.81,1304.52 719.69,1303.62 711.36,1293.90 709.38,1295.01 708.43,1295.09 707.51,1294.86 706.61,1294.31 705.74,1293.45 700.85,1297.58 701.96,1299.61 702.03,1300.59 701.78,1301.55 701.21,1302.49 700.33,1303.41 708.71,1313.08 710.67,1311.97 711.62,1311.88 712.54,1312.11 713.44,1312.66">
+    <junction id="01-27" type="traffic_light" x="710.02" y="1303.48" incLanes="27-01-SW_0 01-26-NW_0 01-26-NW_1 27-00-NE_0 01-27-SE_0 01-27-SE_1" intLanes=":01-27_0_0 :01-27_1_0 :01-27_18_0 :01-27_19_0 :01-27_4_0 :01-27_5_0 :01-27_5_1 :01-27_20_0 :01-27_21_0 :01-27_9_0 :01-27_10_0 :01-27_22_0 :01-27_23_0 :01-27_13_0 :01-27_14_0 :01-27_14_1 :01-27_24_0 :01-27_25_0" shape="714.31,1313.52 719.20,1309.39 718.09,1307.37 718.01,1306.40 718.25,1305.45 718.81,1304.52 719.69,1303.62 711.36,1293.90 709.38,1295.01 708.43,1295.09 707.51,1294.86 706.61,1294.31 705.74,1293.45 700.85,1297.58 701.96,1299.61 702.03,1300.59 701.78,1301.55 701.21,1302.49 700.33,1303.41 708.71,1313.08 710.67,1311.97 711.62,1311.88 712.54,1312.11 713.44,1312.66">
         <request index="0"  response="000000000001100000" foes="000000000001100000" cont="0"/>
         <request index="1"  response="011110000011100000" foes="011111100011100000" cont="0"/>
         <request index="2"  response="011100010011100000" foes="011100010111100000" cont="1"/>
@@ -1184,11 +1184,11 @@
     <junction id=":01-27_18_0" type="internal" x="711.82" y="1305.61" incLanes=":01-27_2_0 27-00-NE_0" intLanes=":01-27_5_0 :01-27_5_1 :01-27_7_0 :01-27_8_0 :01-27_9_0 :01-27_10_0 :01-27_14_0 :01-27_14_1 :01-27_16_0"/>
     <junction id=":01-27_19_0" type="internal" x="715.72" y="1310.23" incLanes=":01-27_3_0 01-26-NW_0 01-27-SE_1 27-00-NE_0" intLanes=":01-27_4_0 :01-27_10_0 :01-27_16_0"/>
     <junction id=":01-27_20_0" type="internal" x="711.82" y="1301.96" incLanes=":01-27_7_0 01-27-SE_0 01-27-SE_1" intLanes=":01-27_1_0 :01-27_2_0 :01-27_10_0 :01-27_11_0 :01-27_12_0 :01-27_13_0 :01-27_14_0 :01-27_14_1"/>
-    <junction id=":01-27_21_0" type="internal" x="714.31" y="1299.80" incLanes=":01-27_8_0 01-27-SE_0 01-27-SE_1 27-00-NE_0 27-01-SE_0" intLanes=":01-27_2_0 :01-27_9_0 :01-27_14_0 :01-27_14_1"/>
-    <junction id=":01-27_22_0" type="internal" x="708.21" y="1301.34" incLanes=":01-27_11_0 27-01-SE_0" intLanes=":01-27_0_0 :01-27_1_0 :01-27_5_0 :01-27_5_1 :01-27_7_0 :01-27_14_0 :01-27_14_1 :01-27_16_0 :01-27_17_0"/>
-    <junction id=":01-27_23_0" type="internal" x="704.33" y="1296.74" incLanes=":01-27_12_0 01-26-NW_1 01-27-SE_0 27-01-SE_0" intLanes=":01-27_1_0 :01-27_7_0 :01-27_13_0"/>
+    <junction id=":01-27_21_0" type="internal" x="714.31" y="1299.80" incLanes=":01-27_8_0 01-27-SE_0 01-27-SE_1 27-00-NE_0 27-01-SW_0" intLanes=":01-27_2_0 :01-27_9_0 :01-27_14_0 :01-27_14_1"/>
+    <junction id=":01-27_22_0" type="internal" x="708.21" y="1301.34" incLanes=":01-27_11_0 27-01-SW_0" intLanes=":01-27_0_0 :01-27_1_0 :01-27_5_0 :01-27_5_1 :01-27_7_0 :01-27_14_0 :01-27_14_1 :01-27_16_0 :01-27_17_0"/>
+    <junction id=":01-27_23_0" type="internal" x="704.33" y="1296.74" incLanes=":01-27_12_0 01-26-NW_1 01-27-SE_0 27-01-SW_0" intLanes=":01-27_1_0 :01-27_7_0 :01-27_13_0"/>
     <junction id=":01-27_24_0" type="internal" x="708.25" y="1305.03" incLanes=":01-27_16_0 01-26-NW_0 01-26-NW_1" intLanes=":01-27_1_0 :01-27_2_0 :01-27_3_0 :01-27_4_0 :01-27_5_0 :01-27_5_1 :01-27_10_0 :01-27_11_0"/>
-    <junction id=":01-27_25_0" type="internal" x="705.73" y="1307.20" incLanes=":01-27_17_0 01-26-NW_0 01-26-NW_1 27-00-NE_0 27-01-SE_0" intLanes=":01-27_0_0 :01-27_5_0 :01-27_5_1 :01-27_11_0"/>
+    <junction id=":01-27_25_0" type="internal" x="705.73" y="1307.20" incLanes=":01-27_17_0 01-26-NW_0 01-26-NW_1 27-00-NE_0 27-01-SW_0" intLanes=":01-27_0_0 :01-27_5_0 :01-27_5_1 :01-27_11_0"/>
     <junction id=":02-25_8_0" type="internal" x="920.32" y="1257.94" incLanes=":02-25_1_0 02-25-SE_0 02-25-SE_1 02-25-SE_2" intLanes=":02-25_2_0 :02-25_5_0 :02-25_5_1 :02-25_5_2"/>
     <junction id=":02-25_9_0" type="internal" x="910.29" y="1250.59" incLanes=":02-25_3_0 02-25-SE_0 25-02-SW_0" intLanes=":02-25_0_0 :02-25_4_0"/>
     <junction id=":03-24_12_0" type="internal" x="1053.48" y="1267.70" incLanes=":03-24_3_0 03-24-SE_0 03-24-SE_1 24-02-NE_0" intLanes=":03-24_4_0 :03-24_8_0 :03-24_8_1"/>
@@ -1258,7 +1258,7 @@
     <connection from="02-26-SE" to="02-25-SE" fromLane="1" toLane="1" via=":02-26_2_1" dir="s" state="M"/>
     <connection from="02-26-SE" to="02-25-SE" fromLane="2" toLane="2" via=":02-26_2_2" dir="s" state="M"/>
     <connection from="02-26-SE" to="26-02-NE" fromLane="2" toLane="0" via=":02-26_5_0" dir="l" state="M"/>
-    <connection from="02-27-SE" to="27-01-SE" fromLane="0" toLane="0" via=":02-27_6_0" dir="r" state="M"/>
+    <connection from="02-27-SE" to="27-01-SW" fromLane="0" toLane="0" via=":02-27_6_0" dir="r" state="M"/>
     <connection from="02-27-SE" to="02-26-SE" fromLane="0" toLane="0" via=":02-27_7_0" dir="s" state="M"/>
     <connection from="02-27-SE" to="02-26-SE" fromLane="1" toLane="1" via=":02-27_7_1" dir="s" state="M"/>
     <connection from="02-27-SE" to="02-26-SE" fromLane="2" toLane="2" via=":02-27_7_2" dir="s" state="M"/>
@@ -1366,16 +1366,16 @@
     <connection from="27-00-SW" to="27-00-NE" fromLane="0" toLane="0" via=":00-27_0_0" dir="t" state="M"/>
     <connection from="27-01-NE" to="02-26-SE" fromLane="0" toLane="0" via=":02-27_3_0" dir="r" state="m"/>
     <connection from="27-01-NE" to="27-02-NE" fromLane="0" toLane="0" via=":02-27_4_0" dir="s" state="m"/>
-    <connection from="27-01-NE" to="27-01-SE" fromLane="0" toLane="0" via=":02-27_5_0" dir="t" state="m"/>
-    <connection from="27-01-SE" to="01-27-NW" fromLane="0" toLane="0" via=":01-27_0_0" tl="53144747" linkIndex="0" dir="r" state="o"/>
-    <connection from="27-01-SE" to="27-00-SW" fromLane="0" toLane="0" via=":01-27_1_0" tl="53144747" linkIndex="1" dir="s" state="o"/>
-    <connection from="27-01-SE" to="01-26-SE" fromLane="0" toLane="1" via=":01-27_2_0" tl="53144747" linkIndex="2" dir="l" state="o"/>
-    <connection from="27-01-SE" to="27-01-NE" fromLane="0" toLane="0" via=":01-27_3_0" tl="53144747" linkIndex="3" dir="t" state="o"/>
+    <connection from="27-01-NE" to="27-01-SW" fromLane="0" toLane="0" via=":02-27_5_0" dir="t" state="m"/>
+    <connection from="27-01-SW" to="01-27-NW" fromLane="0" toLane="0" via=":01-27_0_0" tl="53144747" linkIndex="0" dir="r" state="o"/>
+    <connection from="27-01-SW" to="27-00-SW" fromLane="0" toLane="0" via=":01-27_1_0" tl="53144747" linkIndex="1" dir="s" state="o"/>
+    <connection from="27-01-SW" to="01-26-SE" fromLane="0" toLane="1" via=":01-27_2_0" tl="53144747" linkIndex="2" dir="l" state="o"/>
+    <connection from="27-01-SW" to="27-01-NE" fromLane="0" toLane="0" via=":01-27_3_0" tl="53144747" linkIndex="3" dir="t" state="o"/>
     <connection from="27-02-NE" to="03-26-SE" fromLane="0" toLane="0" via=":03-27_9_0" dir="r" state="m"/>
     <connection from="27-02-NE" to="27-03-NE" fromLane="0" toLane="0" via=":03-27_10_0" dir="s" state="m"/>
     <connection from="27-02-NE" to="03-27-NW" fromLane="0" toLane="1" via=":03-27_11_0" dir="l" state="m"/>
     <connection from="27-02-NE" to="27-02-SW" fromLane="0" toLane="0" via=":03-27_12_0" dir="t" state="m"/>
-    <connection from="27-02-SW" to="27-01-SE" fromLane="0" toLane="0" via=":02-27_0_0" dir="s" state="m"/>
+    <connection from="27-02-SW" to="27-01-SW" fromLane="0" toLane="0" via=":02-27_0_0" dir="s" state="m"/>
     <connection from="27-02-SW" to="02-26-SE" fromLane="0" toLane="2" via=":02-27_1_0" dir="l" state="m"/>
     <connection from="27-02-SW" to="27-02-NE" fromLane="0" toLane="0" via=":02-27_2_0" dir="t" state="m"/>
     <connection from="27-03-NE" to="27-04-NE" fromLane="0" toLane="0" via=":04-27_9_0" tl="53155398" linkIndex="9" dir="s" state="o"/>
@@ -1492,13 +1492,13 @@
     <connection from=":02-26_2" to="02-25-SE" fromLane="1" toLane="1" dir="s" state="M"/>
     <connection from=":02-26_2" to="02-25-SE" fromLane="2" toLane="2" dir="s" state="M"/>
     <connection from=":02-26_5" to="26-02-NE" fromLane="0" toLane="0" dir="l" state="M"/>
-    <connection from=":02-27_0" to="27-01-SE" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":02-27_0" to="27-01-SW" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from=":02-27_1" to="02-26-SE" fromLane="0" toLane="2" dir="l" state="M"/>
     <connection from=":02-27_2" to="27-02-NE" fromLane="0" toLane="0" dir="t" state="M"/>
     <connection from=":02-27_3" to="02-26-SE" fromLane="0" toLane="0" dir="r" state="M"/>
     <connection from=":02-27_4" to="27-02-NE" fromLane="0" toLane="0" dir="s" state="M"/>
-    <connection from=":02-27_5" to="27-01-SE" fromLane="0" toLane="0" dir="t" state="M"/>
-    <connection from=":02-27_6" to="27-01-SE" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":02-27_5" to="27-01-SW" fromLane="0" toLane="0" dir="t" state="M"/>
+    <connection from=":02-27_6" to="27-01-SW" fromLane="0" toLane="0" dir="r" state="M"/>
     <connection from=":02-27_7" to="02-26-SE" fromLane="0" toLane="0" dir="s" state="M"/>
     <connection from=":02-27_7" to="02-26-SE" fromLane="1" toLane="1" dir="s" state="M"/>
     <connection from=":02-27_7" to="02-26-SE" fromLane="2" toLane="2" dir="s" state="M"/>
