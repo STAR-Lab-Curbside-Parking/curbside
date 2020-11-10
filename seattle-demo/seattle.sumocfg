@@ -12,7 +12,7 @@ SPDX-License-Identifier: EPL-2.0
 
     <input>
         <net-file value="seattle.net.xml"/>
-        <!-- <route-files value="trips.trips.xml"/> -->
+        <route-files value="seattle.rou.xml"/>
         <additional-files value="seattle.add.xml"/>
     </input>
 

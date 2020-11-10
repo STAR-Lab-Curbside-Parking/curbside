@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on Thu Oct 15 23:54:45 2020 by Eclipse SUMO sumo Version 1.7.0
-This data file and the accompanying materials
-are made available under the terms of the Eclipse Public License v2.0
-which accompanies this distribution, and is available at
-http://www.eclipse.org/legal/epl-v20.html
-SPDX-License-Identifier: EPL-2.0
+<!-- generated on 11/10/20 11:26:24 by Eclipse SUMO GUI Version 1.7.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="simple.net.xml"/>
-        <route-files value="simple.rou.xml"/>
-        <additional-files value="simple.add.xml"/>
+        <net-file value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\yin_simple\simple.net.xml"/>
+        <route-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\yin_simple\simple.rou.xml"/>
+        <additional-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\yin_simple\simple.add.xml"/>
     </input>
 
     <output>
         <write-license value="true"/>
-        <fcd-output value="fcd.xml"/>
+        <fcd-output value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\yin_simple\fcd.xml"/>
     </output>
 
     <processing>
@@ -30,12 +25,262 @@ SPDX-License-Identifier: EPL-2.0
         <no-step-log value="true"/>
     </report>
 
-    <traci_server>
-        <remote-port value="60199"/>
-    </traci_server>
-
 </configuration>
 -->
 
 <fcd-export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/fcd_file.xsd">
+    <timestep time="0.00">
+        <vehicle id="test" x="-800.15" y="143.83" angle="297.41" type="passenger" speed="0.00" pos="0.00" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-799.66" y="56.50" angle="193.76" type="truck" speed="0.00" pos="0.00" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="1.00">
+        <vehicle id="test" x="-801.55" y="143.83" angle="282.50" type="passenger" speed="1.40" pos="1.40" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-800.72" y="56.46" angle="206.54" type="truck" speed="1.06" pos="1.06" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="2.00">
+        <vehicle id="test" x="-804.99" y="143.83" angle="270.25" type="passenger" speed="3.44" pos="4.84" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-802.99" y="56.38" angle="238.59" type="truck" speed="2.28" pos="3.34" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="3.00">
+        <vehicle id="test" x="-810.08" y="143.83" angle="270.00" type="passenger" speed="5.09" pos="9.93" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-806.18" y="56.27" angle="267.32" type="truck" speed="3.19" pos="6.52" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="4.00">
+        <vehicle id="test" x="-817.31" y="143.83" angle="270.00" type="passenger" speed="7.23" pos="17.16" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-810.42" y="56.12" angle="267.98" type="truck" speed="4.24" pos="10.77" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="5.00">
+        <vehicle id="test" x="-826.93" y="143.83" angle="270.00" type="passenger" speed="9.61" pos="26.78" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-815.90" y="55.93" angle="267.98" type="truck" speed="5.48" pos="16.25" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="6.00">
+        <vehicle id="test" x="-838.25" y="143.83" angle="270.00" type="passenger" speed="11.33" pos="38.10" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-822.63" y="55.69" angle="267.98" type="truck" speed="6.73" pos="22.98" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="7.00">
+        <vehicle id="test" x="-850.95" y="143.83" angle="270.00" type="passenger" speed="12.69" pos="50.80" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-830.22" y="55.42" angle="267.98" type="truck" speed="7.60" pos="30.58" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="8.00">
+        <vehicle id="test" x="-864.74" y="143.83" angle="270.00" type="passenger" speed="13.80" pos="64.60" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-839.05" y="55.11" angle="267.98" type="truck" speed="8.83" pos="39.41" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="9.00">
+        <vehicle id="test" x="-878.57" y="143.83" angle="270.00" type="passenger" speed="13.82" pos="78.42" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-848.80" y="54.76" angle="267.98" type="truck" speed="9.76" pos="49.17" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="10.00">
+        <vehicle id="test" x="-892.12" y="143.83" angle="270.00" type="passenger" speed="13.55" pos="91.97" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-859.77" y="54.38" angle="267.98" type="truck" speed="10.98" pos="60.15" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="11.00">
+        <vehicle id="test" x="-905.66" y="143.83" angle="270.00" type="passenger" speed="13.55" pos="105.52" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-871.85" y="53.95" angle="267.98" type="truck" speed="12.08" pos="72.23" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="12.00">
+        <vehicle id="test" x="-918.94" y="143.83" angle="270.00" type="passenger" speed="13.28" pos="118.80" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.09" y="53.48" angle="267.98" type="truck" speed="13.25" pos="85.48" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="13.00">
+        <vehicle id="test" x="-931.94" y="143.83" angle="270.00" type="passenger" speed="13.00" pos="131.80" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-898.55" y="53.01" angle="267.98" type="truck" speed="13.47" pos="98.95" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="14.00">
+        <vehicle id="test" x="-944.43" y="143.83" angle="270.00" type="passenger" speed="12.48" pos="144.28" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-912.30" y="52.52" angle="267.98" type="truck" speed="13.76" pos="112.71" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="15.00">
+        <vehicle id="taxi" x="-799.66" y="56.50" angle="200.47" type="taxi" speed="0.00" pos="0.00" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-952.41" y="143.83" angle="270.00" type="passenger" speed="7.98" pos="152.27" lane="gneE5_0" slope="0.00"/>
+        <vehicle id="truck" x="-925.92" y="52.04" angle="267.98" type="truck" speed="13.62" pos="126.33" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="16.00">
+        <vehicle id="taxi" x="-802.24" y="56.41" angle="248.72" type="taxi" speed="2.58" pos="2.58" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-957.04" y="142.56" angle="254.91" type="passenger" speed="4.93" pos="4.01" lane=":gneJ5_0_0" slope="0.00"/>
+        <vehicle id="truck" x="-937.38" y="51.64" angle="267.98" type="truck" speed="11.47" pos="137.81" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="17.00">
+        <vehicle id="taxi" x="-806.13" y="56.27" angle="267.98" type="taxi" speed="3.90" pos="6.48" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-958.10" y="137.89" angle="193.38" type="passenger" speed="4.91" pos="0.98" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-945.75" y="51.34" angle="267.98" type="truck" speed="8.37" pos="146.18" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="18.00">
+        <vehicle id="taxi" x="-811.70" y="56.07" angle="267.98" type="taxi" speed="5.57" pos="12.05" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-957.86" y="131.02" angle="178.01" type="passenger" speed="6.87" pos="7.85" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-950.12" y="51.19" angle="267.98" type="truck" speed="4.37" pos="150.55" lane="gneE10_0" slope="0.00"/>
+    </timestep>
+    <timestep time="19.00">
+        <vehicle id="taxi" x="-819.87" y="55.79" angle="267.98" type="taxi" speed="8.17" pos="20.22" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-957.53" y="121.67" angle="178.01" type="passenger" speed="9.36" pos="17.20" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-951.97" y="53.85" angle="296.60" type="truck" speed="3.85" pos="1.12" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="20.00">
+        <vehicle id="passenger" x="-799.66" y="56.50" angle="200.47" type="passenger" speed="0.00" pos="0.00" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-829.77" y="55.44" angle="267.98" type="taxi" speed="9.91" pos="30.13" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-957.16" y="110.94" angle="178.01" type="passenger" speed="10.74" pos="27.94" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-952.14" y="58.70" angle="355.48" type="truck" speed="4.86" pos="5.98" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="21.00">
+        <vehicle id="passenger" x="-801.58" y="56.43" angle="237.10" type="passenger" speed="1.92" pos="1.92" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-841.00" y="55.04" angle="267.98" type="taxi" speed="11.24" pos="41.37" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-956.70" y="97.83" angle="178.01" type="passenger" speed="13.12" pos="41.06" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-952.34" y="64.47" angle="358.01" type="truck" speed="5.77" pos="11.75" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="22.00">
+        <vehicle id="passenger" x="-804.98" y="56.31" angle="267.98" type="passenger" speed="3.41" pos="5.33" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-854.34" y="54.57" angle="267.98" type="taxi" speed="13.34" pos="54.71" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-956.26" y="85.10" angle="178.01" type="passenger" speed="12.73" pos="53.79" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-952.57" y="71.00" angle="358.01" type="truck" speed="6.53" pos="18.28" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="23.00">
+        <vehicle id="passenger" x="-810.19" y="56.13" angle="267.98" type="passenger" speed="5.21" pos="10.53" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-867.91" y="54.09" angle="267.98" type="taxi" speed="13.58" pos="68.29" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-955.82" y="72.41" angle="178.01" type="passenger" speed="12.70" pos="66.49" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-952.83" y="78.74" angle="358.01" type="truck" speed="7.75" pos="26.03" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="24.00">
+        <vehicle id="passenger" x="-817.24" y="55.88" angle="267.98" type="passenger" speed="7.06" pos="17.59" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-880.63" y="53.64" angle="267.98" type="taxi" speed="12.73" pos="81.02" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-955.41" y="60.79" angle="178.01" type="passenger" speed="11.62" pos="78.11" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-953.13" y="87.21" angle="358.01" type="truck" speed="8.47" pos="34.50" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="25.00">
+        <vehicle id="passenger" x="-826.16" y="55.56" angle="267.98" type="passenger" speed="8.93" pos="26.52" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-893.91" y="53.17" angle="267.98" type="taxi" speed="13.29" pos="94.31" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-955.17" y="53.66" angle="178.01" type="passenger" speed="7.14" pos="85.25" lane="gneE9_0" slope="0.00"/>
+        <vehicle id="truck" x="-953.45" y="96.55" angle="358.01" type="truck" speed="9.35" pos="43.85" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="26.00">
+        <vehicle id="passenger" x="-837.42" y="55.17" angle="267.98" type="passenger" speed="11.26" pos="37.78" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-907.35" y="52.70" angle="267.98" type="taxi" speed="13.45" pos="107.75" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-952.79" y="48.50" angle="150.24" type="passenger" speed="6.07" pos="5.02" lane=":gneJ8_1_0" slope="0.00"/>
+        <vehicle id="truck" x="-953.80" y="106.61" angle="358.01" type="truck" speed="10.07" pos="53.91" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="27.00">
+        <vehicle id="passenger" x="-850.03" y="54.72" angle="267.98" type="passenger" speed="12.61" pos="50.40" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-920.49" y="52.23" angle="267.98" type="taxi" speed="13.15" pos="120.90" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-946.90" y="48.09" angle="90.85" type="passenger" speed="5.97" pos="3.26" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-954.19" y="117.63" angle="358.01" type="truck" speed="11.03" pos="64.94" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="28.00">
+        <vehicle id="passenger" x="-862.71" y="54.27" angle="267.98" type="passenger" speed="12.69" pos="63.09" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-933.48" y="51.77" angle="267.98" type="taxi" speed="12.99" pos="133.90" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-938.43" y="48.39" angle="87.98" type="passenger" speed="8.48" pos="11.74" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-954.59" y="129.30" angle="358.01" type="truck" speed="11.68" pos="76.62" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="29.00">
+        <vehicle id="passenger" x="-875.90" y="53.81" angle="267.98" type="passenger" speed="13.20" pos="76.29" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-943.92" y="51.40" angle="267.98" type="taxi" speed="10.45" pos="144.35" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-927.80" y="48.77" angle="87.98" type="passenger" speed="10.63" pos="22.37" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-954.86" y="136.97" angle="358.01" type="truck" speed="7.68" pos="84.29" lane="gneE8_0" slope="0.00"/>
+    </timestep>
+    <timestep time="30.00">
+        <vehicle id="passenger" x="-889.10" y="53.34" angle="267.98" type="passenger" speed="13.21" pos="89.50" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-950.15" y="51.18" angle="267.98" type="taxi" speed="6.24" pos="150.58" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="test" x="-915.80" y="49.19" angle="87.98" type="passenger" speed="12.01" pos="34.38" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-954.27" y="140.40" angle="3.96" type="truck" speed="3.68" pos="1.67" lane=":gneJ5_1_0" slope="0.00"/>
+    </timestep>
+    <timestep time="31.00">
+        <vehicle id="passenger" x="-901.86" y="52.89" angle="267.98" type="passenger" speed="12.76" pos="102.26" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-951.94" y="53.09" angle="296.16" type="taxi" speed="3.05" pos="0.36" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-902.14" y="49.68" angle="87.98" type="passenger" speed="13.67" pos="48.05" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-950.41" y="140.63" angle="54.53" type="truck" speed="3.90" pos="2.92" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="32.00">
+        <vehicle id="passenger" x="-915.71" y="52.40" angle="267.98" type="passenger" speed="13.86" pos="116.12" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-952.13" y="58.43" angle="358.01" type="taxi" speed="5.34" pos="5.70" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-889.31" y="50.13" angle="87.98" type="passenger" speed="12.84" pos="60.89" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-945.52" y="140.63" angle="90.00" type="truck" speed="4.89" pos="7.81" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="33.00">
+        <vehicle id="passenger" x="-928.51" y="51.95" angle="267.98" type="passenger" speed="12.81" pos="128.93" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-952.38" y="65.79" angle="358.01" type="taxi" speed="7.37" pos="13.07" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-876.23" y="50.59" angle="87.98" type="passenger" speed="13.09" pos="73.97" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-939.88" y="140.63" angle="90.00" type="truck" speed="5.64" pos="13.45" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="34.00">
+        <vehicle id="passenger" x="-941.11" y="51.50" angle="267.98" type="passenger" speed="12.61" pos="141.54" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-952.72" y="75.48" angle="358.01" type="taxi" speed="9.69" pos="22.76" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-862.95" y="51.06" angle="87.98" type="passenger" speed="13.29" pos="87.26" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-933.24" y="140.63" angle="90.00" type="truck" speed="6.64" pos="20.09" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="35.00">
+        <vehicle id="passenger" x="-949.22" y="51.22" angle="267.98" type="passenger" speed="8.11" pos="149.65" lane="gneE10_0" slope="0.00"/>
+        <vehicle id="taxi" x="-953.10" y="86.50" angle="358.01" type="taxi" speed="11.02" pos="33.79" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-849.78" y="51.53" angle="87.98" type="passenger" speed="13.17" pos="100.44" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-925.86" y="140.63" angle="90.00" type="truck" speed="7.38" pos="27.48" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="36.00">
+        <vehicle id="passenger" x="-951.93" y="52.71" angle="289.34" type="passenger" speed="3.61" pos="2.55" lane=":gneJ8_0_0" slope="0.00"/>
+        <vehicle id="taxi" x="-953.55" y="99.29" angle="358.01" type="taxi" speed="12.80" pos="46.58" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-836.27" y="52.00" angle="87.98" type="passenger" speed="13.52" pos="113.96" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-917.77" y="140.63" angle="90.00" type="truck" speed="8.09" pos="35.56" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="37.00">
+        <vehicle id="passenger" x="-952.04" y="56.02" angle="348.88" type="passenger" speed="3.32" pos="3.30" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-954.01" y="112.47" angle="358.01" type="taxi" speed="13.19" pos="59.78" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-822.46" y="52.49" angle="87.98" type="passenger" speed="13.82" pos="127.78" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-908.76" y="140.63" angle="90.00" type="truck" speed="9.01" pos="44.57" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="38.00">
+        <vehicle id="passenger" x="-952.21" y="60.83" angle="358.01" type="passenger" speed="4.81" pos="8.11" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-954.44" y="124.80" angle="358.01" type="taxi" speed="12.33" pos="72.11" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="test" x="-808.66" y="52.98" angle="87.98" type="passenger" speed="13.80" pos="141.58" lane="gneE11_0" slope="0.00"/>
+        <vehicle id="truck" x="-898.62" y="140.63" angle="90.00" type="truck" speed="10.14" pos="54.72" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="39.00">
+        <vehicle id="passenger" x="-952.44" y="67.44" angle="358.01" type="passenger" speed="6.61" pos="14.72" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-954.75" y="133.95" angle="358.01" type="taxi" speed="9.15" pos="81.26" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="truck" x="-890.38" y="140.63" angle="90.00" type="truck" speed="8.24" pos="62.95" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="40.00">
+        <vehicle id="passenger" x="-952.76" y="76.56" angle="358.01" type="passenger" speed="9.12" pos="23.84" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-954.92" y="138.60" angle="358.01" type="taxi" speed="4.65" pos="85.92" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="truck" x="-886.12" y="140.63" angle="90.00" type="truck" speed="4.27" pos="67.22" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="41.00">
+        <vehicle id="passenger" x="-953.15" y="87.75" angle="358.01" type="passenger" speed="11.19" pos="35.04" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-953.24" y="140.63" angle="22.43" type="taxi" speed="3.12" pos="0.09" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.47" y="140.63" angle="90.00" type="truck" speed="0.64" pos="67.86" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="42.00">
+        <vehicle id="passenger" x="-953.60" y="100.84" angle="358.01" type="passenger" speed="13.10" pos="48.14" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-947.75" y="140.63" angle="90.00" type="taxi" speed="5.49" pos="5.58" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="43.00">
+        <vehicle id="passenger" x="-954.04" y="113.53" angle="358.01" type="passenger" speed="12.70" pos="60.83" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-940.88" y="140.63" angle="90.00" type="taxi" speed="6.87" pos="12.45" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="44.00">
+        <vehicle id="passenger" x="-954.47" y="125.63" angle="358.01" type="passenger" speed="12.11" pos="72.94" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-931.96" y="140.63" angle="90.00" type="taxi" speed="8.91" pos="21.37" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="45.00">
+        <vehicle id="passenger" x="-954.75" y="133.84" angle="358.01" type="passenger" speed="8.21" pos="81.15" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-923.07" y="140.63" angle="90.00" type="taxi" speed="8.89" pos="30.26" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="46.00">
+        <vehicle id="passenger" x="-954.89" y="137.78" angle="358.01" type="passenger" speed="3.95" pos="85.10" lane="gneE8_0" slope="0.00"/>
+        <vehicle id="taxi" x="-918.68" y="140.63" angle="90.00" type="taxi" speed="4.39" pos="34.65" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="47.00">
+        <vehicle id="passenger" x="-954.22" y="140.43" angle="7.24" type="passenger" speed="2.93" pos="1.73" lane=":gneJ5_1_0" slope="0.00"/>
+        <vehicle id="taxi" x="-918.48" y="140.63" angle="90.00" type="taxi" speed="0.20" pos="34.85" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="48.00">
+        <vehicle id="passenger" x="-950.76" y="140.63" angle="71.03" type="passenger" speed="3.50" pos="2.57" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="taxi" x="-918.34" y="140.63" angle="90.00" type="taxi" speed="0.15" pos="35.00" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
+    <timestep time="49.00">
+        <vehicle id="passenger" x="-944.69" y="140.63" angle="90.00" type="passenger" speed="6.07" pos="8.64" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="taxi" x="-918.33" y="137.43" angle="90.00" type="taxi" speed="0.00" pos="35.00" lane="gneE4_0" slope="0.00"/>
+        <vehicle id="truck" x="-885.42" y="137.43" angle="90.00" type="truck" speed="0.03" pos="67.89" lane="gneE4_0" slope="0.00"/>
+    </timestep>
 </fcd-export>

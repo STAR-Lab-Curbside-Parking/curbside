@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 11/10/20 11:56:01 by Eclipse SUMO GUI Version 1.7.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.net.xml"/>
+        <route-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.rou.xml"/>
+        <additional-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.add.xml"/>
+    </input>
+
+    <output>
+        <write-license value="true"/>
+        <fcd-output value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\fcd.xml"/>
+    </output>
+
+    <processing>
+        <default.speeddev value="0"/>
+    </processing>
+
+    <report>
+        <xml-validation value="never"/>
+        <xml-validation.routes value="never"/>
+        <duration-log.disable value="true"/>
+        <no-step-log value="true"/>
+    </report>
+
+</configuration>
