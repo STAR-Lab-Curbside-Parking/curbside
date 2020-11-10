@@ -12,7 +12,7 @@ SPDX-License-Identifier: EPL-2.0
 
     <input>
         <net-file value="sea_net.net.xml"/>
-        <route-files value="trips.trips.xml"/>
+        <!-- <route-files value="trips.trips.xml"/> -->
         <additional-files value="input_additional.add.xml"/>
     </input>
 
