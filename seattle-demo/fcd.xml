@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 11/10/20 13:06:58 by Eclipse SUMO GUI Version 1.7.0
+<!-- generated on Tue Nov 10 14:58:13 2020 by Eclipse SUMO GUI Version 1.7.0
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.net.xml"/>
-        <route-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.rou.xml"/>
-        <additional-files value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\seattle.add.xml"/>
+        <net-file value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/seattle.net.xml"/>
+        <route-files value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/seattle.trips.xml"/>
+        <additional-files value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/seattle.add.xml"/>
     </input>
 
     <output>
         <write-license value="true"/>
-        <fcd-output value="D:\OneDrive%20-%20UW\Projects\F_CurbParking\curbside\seattle-demo\fcd.xml"/>
+        <fcd-output value="/Users/shuyiyin/Dropbox/UW/proposals/NSF%20CIS/simulation/curbside/seattle-demo/fcd.xml"/>
     </output>
 
     <processing>
