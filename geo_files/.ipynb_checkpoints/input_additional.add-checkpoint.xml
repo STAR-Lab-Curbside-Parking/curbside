@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <location netOffset="-362563.54,-4832311.19" convBoundary="0.00,0.00,2064.54,1284.45" origBoundary="13.296064,43.631354,13.321826,43.642858" projParameter="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"/>
+    
+    <parkingArea id="01-24-NE" lane="01-24-NE_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="01-24-SW" lane="01-24-SW_0" startPos="10" endPos="10" roadsideCapacity="3" angle="0" />
+    <parkingArea id="01-25-NE" lane="01-25-NE_0" startPos="10" endPos="10" roadsideCapacity="6" angle="0" />
+    <parkingArea id="01-25-SW" lane="01-25-SW_0" startPos="10" endPos="10" roadsideCapacity="5" angle="0" />
+    <parkingArea id="01-26-SW" lane="01-26-SW_0" startPos="10" endPos="10" roadsideCapacity="9" angle="0" />
+    <parkingArea id="02-24-NE" lane="02-24-NE_0" startPos="10" endPos="10" roadsideCapacity="4" angle="0" />
+    <parkingArea id="02-25-NE" lane="02-25-NE_0" startPos="10" endPos="10" roadsideCapacity="10" angle="0" />
+    <parkingArea id="02-25-SW" lane="02-25-SW_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="02-26-NE" lane="02-26-NE_0" startPos="10" endPos="10" roadsideCapacity="4" angle="0" />
+    <parkingArea id="03-24-NE" lane="03-24-NE_0" startPos="10" endPos="10" roadsideCapacity="7" angle="0" />
+    <parkingArea id="03-24-SW" lane="03-24-SW_0" startPos="10" endPos="10" roadsideCapacity="6" angle="0" />
+    <parkingArea id="03-25-NE" lane="03-25-NE_0" startPos="10" endPos="10" roadsideCapacity="9" angle="0" />
+    <parkingArea id="03-25-SW" lane="03-25-SW_0" startPos="10" endPos="10" roadsideCapacity="10" angle="0" />
+    <parkingArea id="03-26-SW" lane="03-26-SW_0" startPos="10" endPos="10" roadsideCapacity="1" angle="0" />
+    <parkingArea id="04-24-NE" lane="04-24-NE_0" startPos="10" endPos="10" roadsideCapacity="9" angle="0" />
+    <parkingArea id="04-24-SW" lane="04-24-SW_0" startPos="10" endPos="10" roadsideCapacity="6" angle="0" />
+    <parkingArea id="04-25-NE" lane="04-25-NE_0" startPos="10" endPos="10" roadsideCapacity="9" angle="0" />
+    <parkingArea id="04-25-SW" lane="04-25-SW_0" startPos="10" endPos="10" roadsideCapacity="6" angle="0" />
+    <parkingArea id="04-26-NE" lane="04-26-NE_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="04-26-SW" lane="04-26-SW_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="24-01-NW" lane="24-01-NW_0" startPos="10" endPos="10" roadsideCapacity="17" angle="0" />
+    <parkingArea id="24-01-SE" lane="24-01-SE_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="24-02-NW" lane="24-02-NW_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="24-02-SE" lane="24-02-SE_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="25-01-NW" lane="25-01-NW_0" startPos="10" endPos="10" roadsideCapacity="9" angle="0" />
+    <parkingArea id="25-01-SE" lane="25-01-SE_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="25-02-SE" lane="25-02-SE_0" startPos="10" endPos="10" roadsideCapacity="3" angle="0" />
+    <parkingArea id="26-01-NW" lane="26-01-NW_0" startPos="10" endPos="10" roadsideCapacity="7" angle="0" />
+    <parkingArea id="26-01-SE" lane="26-01-SE_0" startPos="10" endPos="10" roadsideCapacity="7" angle="0" />
+    <parkingArea id="26-02-NW" lane="26-02-NW_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="26-02-SE" lane="26-02-SE_0" startPos="10" endPos="10" roadsideCapacity="3" angle="0" />
+    <parkingArea id="26-03-NW" lane="26-03-NW_0" startPos="10" endPos="10" roadsideCapacity="8" angle="0" />
+    <parkingArea id="26-03-SE" lane="26-03-SE_0" startPos="10" endPos="10" roadsideCapacity="11" angle="0" />
+    <parkingArea id="27-01-SE" lane="27-01-SE_0" startPos="10" endPos="10" roadsideCapacity="5" angle="0" />
+    <parkingArea id="27-02-SE" lane="27-02-SE_0" startPos="10" endPos="10" roadsideCapacity="5" angle="0" />
+    <parkingArea id="27-03-NW" lane="27-03-NW_0" startPos="10" endPos="10" roadsideCapacity="7" angle="0" />
+    <parkingArea id="27-03-SE" lane="27-03-SE_0" startPos="10" endPos="10" roadsideCapacity="4" angle="0" />
+
+</additional>
