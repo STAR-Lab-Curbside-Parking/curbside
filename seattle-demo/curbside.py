@@ -2,10 +2,13 @@
 curb.py
 ---------------------------------------------------------------
 This file defines curb agents for the curbside management problem.
-Thus, it is imported by contro.py and should work together with it.
-igraph is documented here: https://igraph.org/python/
+Thus, it is imported and should create instances there.
+---------------------------------------------------------------
+python-igraph is documented here: https://igraph.org/python/
 graph-tool is documented here (although not used): https://graph-tool.skewed.de/
 '''
+
+# import
 import os, sys
 import heapq
 import operator
@@ -13,7 +16,7 @@ import operator
 import igraph
 import xml.etree.ElementTree as ET
 
-# set up
+# SUMO and traci
 if 'SUMO_HOME' in os.environ:
     tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
     sys.path.append(tools)
@@ -22,26 +25,17 @@ else:
 
 import traci
 
-def create_graph(net_xml):
-    road_network = igraph.Graph(directed=True)
-
-    root = ET.parse(net_xml).getroot()
-
-    # add vertices with names
-    # can refer to nodes with their names, instead of id's in most cases
-    for child in root.iter('junction'):
-        _ = road_network.add_vertex(name=child.get('id'))
-    for child in root.iter('edge'):
-        if child.get('function') != 'internal':
-            _ = road_network.add_edge(child.get('from'), child.get('to'),
-                                      name=child.get('id'),
-                                      weight=float([kid.get('length') for kid in child.iter('lane')][0]))
-
-    return road_network
-
+# general class
 class Curbside:
     def __init__(self, add_xml, net_xml, curb_id, vclass):
-        # construct start dictionary
+        """
+        initialize instance
+        Args:
+            add_xml : str, additional file that defines curb spaces in SUMO, "XXX.add.xml"
+            net_xml : str, network file that defines simulation network in SUMO, "XXX.net.xml"
+            curb_id : str, id of the curb to be created, from user input
+            vclass : str, allowable type of vehicle to park at this curb, from user input
+        """
         start_dict = {'id': curb_id,
                       'vclass': vclass,
                       'add_xml': add_xml,
@@ -59,7 +53,6 @@ class Curbside:
 
         # static attributes
         self.id = start_dict['id']
-        # self.name = start_dict['name']
         self.lane = start_dict['lane']
         self.edge = self.lane.split('_')[0]
         self.start_pos = start_dict['start_pos']
@@ -68,7 +61,6 @@ class Curbside:
         self.width = start_dict['width']
         self.from_junction = start_dict['from_junction']
         self.to_junction = start_dict['to_junction']
-
         self.length = abs(self.start_pos - self.end_pos)
         self.edge = self.lane.split('_')[0]
 
@@ -81,24 +73,16 @@ class Curbside:
         # internal schedule
         self.schedule = [None] * (24 * 12)
 
-    # @classmethod
-    # def _from_xml(cls, add_xml, net_xml, curb_id, vclass):
-    #     # create item from add_xml
-
-    #     start_dict = {'id': curb_id, 
-    #                   'vclass': vclass, 
-    #                   'add_xml': add_xml, 
-    #                   'net_xml': net_xml}
-    #     curb_add_info = cls.read_curb_add(add_xml, curb_id)
-    #     curb_net_info = cls.read_curb_net(net_xml, curb_add_info['lane'])
-
-    #     start_dict = {**start_dict, **curb_add_info, **curb_net_info}
-
-    #     cls.validate(start_dict)
-    #     return cls(start_dict)
-
     @staticmethod
     def read_curb_add(add_xml, curb_id):
+        """
+        search info for specified curbside/parking area in additional xml in SUMO
+        Args:
+            add_xml : str, additional document that defines parking areas in SUMO simulation
+            curb_id : str, id of curb to query
+        Returns:
+            result : dictionary
+        """
         result = {}
         # read from XML file
         root = ET.parse(add_xml).getroot()
@@ -117,6 +101,16 @@ class Curbside:
 
     @staticmethod
     def read_curb_net(net_xml, lane):
+        """
+        search info for specified lane in additional xml in SUMO. from_ and to_junctions are collected
+        will be used in further graph construction and search 
+        
+        Args:
+            net_xml : str, network document in SUMO simulation
+            lane : str, id of the lane of the curb
+        Returns:
+            result : dictionary
+        """
         result = {}
 
         # read from XML file
@@ -126,6 +120,7 @@ class Curbside:
             if child.get('function') != 'internal':
                 for kid in child.iter('lane'):
                     if kid.get('id') == lane:
+                        # collect from to junctions of the lane
                         result['from_junction'] = child.get('from')
                         result['to_junction'] = child.get('to')
                         return result
@@ -133,6 +128,12 @@ class Curbside:
 
     @staticmethod
     def validate(start_dict):
+        """
+        validate collected info before creating an instance
+        
+        Args:
+            start_dict : dictionary, basic info to be validated
+        """
         if start_dict['capacity'] < 0:
             raise Exception()
 
@@ -146,13 +147,24 @@ class Curbside:
             raise Exception()
 
 class SmartCurbside(Curbside):
-
+    """
+    smart curb class: a subclass of general curbside
+    """
+    
+    # class property: 
+    ## smart (Y/N)
+    ## upstream roadnetwork search radius (int)
+    ## downstream roadnetwork search radius (int)
     smart = 1
     upstream_search_radius = 100
     downstream_search_radius = 200
 
     def __init__(self, smart, add_xml, net_xml, curb_id, vclass,
                  road_network):
+        """
+        initialize as its super class does
+        then find neighborhood
+        """
         super().__init__(add_xml, net_xml, curb_id, vclass)
 
         # should be called in the simulation after all curbs are initiated
@@ -165,10 +177,16 @@ class SmartCurbside(Curbside):
         """
         Find neighborhoods at the vicinity of each smart curb
         only smart curb has this function
+        
+        Args:
+            road_network : igraph instance, the constructued simulation network
+        
+        Returns:
+            self.nearby_curb : initialized dictionary of "(neighbor curb id, distance) - occupancy" pair
         """
 
         # search
-        # downstream
+        ## downstream
         def search_downstream(road_network, queue, discovered, output_nodes):
             """
             BFS recursive for downstream implemented with heap queue in Python
@@ -192,7 +210,7 @@ class SmartCurbside(Curbside):
             # recursive
             search_downstream(road_network, queue, discovered, output_nodes)
 
-        # upstream
+        ## upstream
         def search_upstream(road_network, queue, discovered, output_nodes):
             """
             BFS recursive for upstream
@@ -284,6 +302,9 @@ class SmartCurbside(Curbside):
                         pass
 
     def _update_nearby_curb(self):
+        """
+        update nearby_cub status
+        """
         # update nearby curb status during simulation
         for curb_pair in self.nearby_curb:
             self.nearby_curb[curb_pair] = traci.simulation.getParameter(curb_pair[0], "parkingArea.occupancy")
@@ -302,10 +323,5 @@ class SmartCurbside(Curbside):
 
         # closest available curb and associated distance
         return available_curbs[0] 
-
-    # @classmethod
-    # def _from_xml(cls, add_xml, net_xml, curb_id, vclass):
-    #     curb_instance = super()._from_xml(add_xml, net_xml, curb_id, vclass)
-    #     return curb_instance
 
 
