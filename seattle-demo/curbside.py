@@ -66,8 +66,11 @@ class Curbside:
 
         # dynamic attributes
         self.vclass = start_dict['vclass']
+        # physically parked vehicle set
         self.parked_vehicle = set()
+        # confirmed set: parked + planned (on the way)
         self.occupied_vehicle = set()
+        # moving vehicles on the host edge
         self.moving_vehicle = set()
 
         # internal schedule
