@@ -39,7 +39,7 @@ def create_graph(net_xml):
 
     return road_network
 
-class curb:
+class Curbside:
     def __init__(self, add_xml, net_xml, curb_id, vclass):
         # construct start dictionary
         start_dict = {'id': curb_id,
@@ -61,6 +61,7 @@ class curb:
         self.id = start_dict['id']
         # self.name = start_dict['name']
         self.lane = start_dict['lane']
+        self.edge = self.lane.split('_')[0]
         self.start_pos = start_dict['start_pos']
         self.end_pos = start_dict['end_pos']
         self.capacity = start_dict['capacity']
@@ -73,7 +74,9 @@ class curb:
 
         # dynamic attributes
         self.vclass = start_dict['vclass']
-        self.occupany = 0
+        self.parked_vehicle = set()
+        self.occupied_vehicle = set()
+        self.moving_vehicle = set()
 
         # internal schedule
         self.schedule = [None] * (24 * 12)
@@ -142,7 +145,7 @@ class curb:
         if start_dict['vclass'] is None:
             raise Exception()
 
-class smart_curb(curb):
+class SmartCurbside(Curbside):
 
     smart = 1
     upstream_search_radius = 100
@@ -280,7 +283,7 @@ class smart_curb(curb):
                     except:
                         pass
 
-    def _update_nearby_curb():
+    def _update_nearby_curb(self):
         # update nearby curb status during simulation
         for curb_pair in self.nearby_curb:
             self.nearby_curb[curb_pair] = traci.simulation.getParameter(curb_pair[0], "parkingArea.occupancy")
@@ -292,23 +295,13 @@ class smart_curb(curb):
         based on current status of nearby curbs
         make a reroute decision
         """ 
-        # find all available curbs with 0 occupancy
-        available_curbs = [curb_pair for curb_pair in self.nearby_curb if self.nearby_curb[curb_pair] == 0]
+        # find all available curbs with available spaces
+        available_curbs = [curb_pair for curb_pair in self.nearby_curb if self.nearby_curb[curb_pair] < traci.simulation.getParameter(curb_pair[0], "parkingArea.capacity")]
 
         available_curbs.sort(key=operator.itemgetter(1))
 
         # closest available curb and associated distance
-        return available_curbs[0]
-
-    def _decide_serve(self):
-        """
-        two options:
-            (1) accept request and serve;
-            (2) reroute vehicle to closest parking space currently available;
-        """
-        # accept or serve
-        # reroute to nearest available parking spot
-        print('yes')
+        return available_curbs[0] 
 
     # @classmethod
     # def _from_xml(cls, add_xml, net_xml, curb_id, vclass):
