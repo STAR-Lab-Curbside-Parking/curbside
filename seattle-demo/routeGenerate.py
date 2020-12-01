@@ -16,8 +16,10 @@ rou_xml = "seattle.trips.xml"
 demand_csv = "parking_demand_dist.csv"
     
 
-def GenerateRoutes(demand_factor = 1.0, simulate_hour = 12):
-
+def GenerateRoutes(demand_factor = 1.0, simulate_hour = 12, seed = 1):
+    
+	random.seed(seed)
+    
 	# get parking area info, including parkingArea IDs and capaciy
 	parking_areas = []
 	parking_areas_capacity = []
