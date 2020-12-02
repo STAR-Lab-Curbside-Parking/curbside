@@ -17,7 +17,17 @@ demand_csv = "parking_demand_dist.csv"
     
 
 def GenerateRoutes(demand_factor=1.0, taxi_factor=1, taxi_park_time=3*60, taxi_num=200, flow_num=200, simulate_hour = 12, seed = 1):
-    
+    """
+    generate route (trip) file for SUMO parking environment
+    Args:
+        demand_factor : float, factor multiplied with the passenger vehicle parking demand 
+        taxi_factor : float, factor multiplied with the taxi vehicle parking demand 
+        taxi_park_time : int, delivery/taxi vehicles parking time (default 3 minutes)
+        taxi_num : int, number of delivery/taxi vehicles that need to park 
+        flow_num : int, number of vehicles in randomly generated traffic flow 
+        simulate_hour : int, simulation stating time in the hour of day based on a fixed daily parking demand
+        seed : int, random seed
+    """
 	random.seed(seed)
     
 	# get parking area info, including parkingArea IDs and capaciy
@@ -136,7 +146,7 @@ def GenerateRoutes(demand_factor=1.0, taxi_factor=1, taxi_park_time=3*60, taxi_n
 
 	    print("""\t<vType id="park_passenger" vClass="passenger" guiShape="passenger/sedan" color="255,183,59"></vType>\n
     <vType id="pass_passenger" vClass="passenger" guiShape="passenger/hatchback" color="192,192,192"></vType>\n
-    <vType id="taxi" vClass="taxi" guiShape="truck" color="245,39,224" length="6.0" width="3"></vType>
+    <vType id="taxi" vClass="taxi" guiShape="truck" color="245,39,224" length="5.0" width="3"></vType>
           """, 
           file=rou)
 
