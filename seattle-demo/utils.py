@@ -1,11 +1,8 @@
-
 import random
 
 import igraph
 import pandas as pd
 import xml.etree.ElementTree as ET
-
-import traci
 
 def create_graph(net_xml):
     road_network = igraph.Graph(directed=True)
@@ -181,7 +178,7 @@ def generate_route(psg_park_dm_x=1,
                 parking_areas_availble.remove(parking_area)
             d = random.choice(edges_d)
             parking_left_time = 3600
-            print('''\t<trip id="e_g60_{}" depart="{}" to="{}" type="psg_park">
+            print('''\t<trip id="psg_g60_{}" depart="{}" to="{}" type="psg_park">
         <stop index="0" parkingArea="{}" duration="{}" parking="true"/>
     </trip>'''.format(i, 0, d, parking_area, parking_left_time), file = rou)
         
@@ -193,7 +190,7 @@ def generate_route(psg_park_dm_x=1,
                 parking_areas_availble.remove(parking_area)
             d = random.choice(edges_d)
             parking_left_time = (60 - random.randint(1, 60)) * 60
-            print('''\t<trip id="e_l60_{}" depart="{}" to="{}" type="psg_park">
+            print('''\t<trip id="psg_l60_{}" depart="{}" to="{}" type="psg_park">
         <stop index="0" parkingArea="{}" duration="{}" parking="true"/>
     </trip>'''.format(i, 0, d, parking_area, parking_left_time), file = rou)
     
@@ -202,7 +199,7 @@ def generate_route(psg_park_dm_x=1,
         ## including passenger veh and dlvs
         for i in range(len(parking_config_list)):
             dt, o, d, pa, pt, vType = parking_config_list[i]
-            print('''\t<trip id="t{}" depart="{}" from="{}" to="{}" type="{}">
+            print('''\t<trip id="dlv_{}" depart="{}" from="{}" to="{}" type="{}">
         <stop index="0" parkingArea="{}" duration="{}" parking="true"/>
     </trip>'''.format(i, dt, o, d, vType, pa, pt), file = rou)
 
@@ -213,5 +210,5 @@ def generate_route(psg_park_dm_x=1,
 
 
 def is_dlv_veh(veh):
-    # return veh.startswith('t', beg=0)
-    return traci.vehicle.getVehicleClass(veh) == 'delivery'
+    return veh.startswith('dlv', 0, 3)
+    # return traci.vehicle.getVehicleClass(veh) == 'delivery'
