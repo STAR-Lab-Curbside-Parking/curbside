@@ -11,7 +11,7 @@ graph-tool is documented here (although not used): https://graph-tool.skewed.de/
 # import
 import os, sys
 import heapq
-import operator
+import operator, random
 
 import igraph
 import xml.etree.ElementTree as ET
@@ -25,6 +25,9 @@ else:
 
 import traci
 
+def is_dlv_veh(veh):
+    # return veh.startswith('t', beg=0)
+    return traci.vehicle.getVehicleClass(veh) == 'delivery'
 # general class
 class Curbside:
     def __init__(self, add_xml, net_xml, curb_id, vclass):
@@ -57,7 +60,6 @@ class Curbside:
         self.edge = self.lane.split('_')[0]
         self.start_pos = start_dict['start_pos']
         self.end_pos = start_dict['end_pos']
-        self.capacity = start_dict['capacity']
         self.width = start_dict['width']
         self.from_junction = start_dict['from_junction']
         self.to_junction = start_dict['to_junction']
@@ -75,6 +77,15 @@ class Curbside:
 
         # internal schedule
         self.schedule = [None] * (24 * 12)
+        
+        # two capacities
+        self.tot_cap = start_dict['capacity']
+        self.psg_cap = self.tot_cap
+        self.dlv_cap = 0
+
+        # occupancy count
+        self.dlv_cnt = 0
+        self.psg_cnt = 0
 
     @staticmethod
     def read_curb_add(add_xml, curb_id):
@@ -159,33 +170,30 @@ class SmartCurbside(Curbside):
     ## upstream roadnetwork search radius (int)
     ## downstream roadnetwork search radius (int)
     smart = 1
-    upstream_search_radius = 100
-    downstream_search_radius = 200
+    upstream_search_radius = 1000
+    downstream_search_radius = 2000
 
     def __init__(self, smart, add_xml, net_xml, curb_id, vclass,
                  road_network):
         """
         initialize as its super class does
-        then find neighborhood
         """
         super().__init__(add_xml, net_xml, curb_id, vclass)
-
-        # should be called in the simulation after all curbs are initiated
-        self.find_neighborhood(road_network)
 
     def __eq__(self, other):
         return self.id == other.id
 
-    def find_neighborhood(self, road_network):
+    def find_neighborhood(self, road_network, curbs, option='nearest'):
         """
         Find neighborhoods at the vicinity of each smart curb
         only smart curb has this function
         
         Args:
             road_network : igraph instance, the constructued simulation network
+            option : string, choice of "vicinity", either "nearest" or "whole"
         
         Returns:
-            self.nearby_curb : initialized dictionary of "(neighbor curb id, distance) - occupancy" pair
+            self.neighbor : initialized dictionary of "(neighbor curb id, distance) - occupancy" pair
         """
 
         # search
@@ -258,73 +266,103 @@ class SmartCurbside(Curbside):
         self.view = road_network.subgraph(list(downstream_nodes | upstream_nodes))
 
         # find associated curbs
-        self.nearby_curb = {}
-
-        # root of XML
-        root = ET.parse(self.add_xml).getroot()
-
+        self.neighbor = {}
+        
         # start_x
-        for child in root.iter('additional'):
-            for kid in child.iter('parkingArea'):
-                if kid.get('id') == self.id:
-                    lane_length = self.view.es.find(name=self.edge)['weight']
+        lane_length = self.view.es.find(name=self.edge)['weight']
         start_x = self.start_pos if self.start_pos > 0 else lane_length + self.start_pos
 
         # shortest path distance and end_x
-        for child in root.iter('additional'):
-            for kid in child.iter('parkingArea'):
-                if kid.get('id') != self.id:
-                    # if the curb is in the local view
-                    # find it the edge in the edge sequence es
-                    target_edge = kid.get('lane').split('_')[0]
-                    try:
-                        _ = self.view.es.find(name=target_edge)
-                        destination_node = self.view.es.find(name=target_edge).source
+        # it seems all curbs are included in local view
+        for curb_id, curb in curbs.items():
+            assert curb_id == curb.id
+            if self.id != curb_id:
+                if option == "whole":
+                    distance = self._roadway_dist(start_x, float(curb.start_pos), curb.edge)
+                    self.neighbor[(curb_id, round(distance,2))] = [0, 0]
+                else:
+                    # nearest
+                    if len(set([curb.from_junction, curb.to_junction]).intersection(set([self.from_junction, self.to_junction]))) > 0:
+                        distance = self._roadway_dist(start_x, float(curb.start_pos), curb.edge)
+                        self.neighbor[(curb_id, round(distance, 2))] = [0, 0]
 
-                        # shortest path distance
-                        distance = self.view.shortest_paths_dijkstra(source=self.to_junction,
-                                                                     target=destination_node, 
-                                                                     weights='weight', mode='OUT')[0][0]
+    def _roadway_dist(self, start_x, dest_pos, target_edge):
+        """
+        calculates roadway distance between two curbs
+        """
 
-                        # end_x from the last junction to destination curb
-                        if float(kid.get('startPos')) >= 0:
-                            end_x = float(kid.get('startPos'))
-                        else:
-                            end_x = self.view.es.find(name=target_edge)['weight'] + float(kid.get('startPos'))
+        # try:
+        #     _ = self.view.es.find(name=target_edge)
+        # if the previous statement does not raise error then the following is executed
+        # print(target_edge)
+        destination_node = self.view.es.find(name=target_edge).source
+        # print(target_edge)
+        # print(destination_node)
+        # print(self.view.vs[destination_node]['name'])
 
-                        # adjust for first and last mile
-                        if (self.view.es.find(name=self.edge).source == \
-                            self.view.vs.find(name=self.from_junction).index) and (end_x > start_x):
-                            distance = end_x - start_x
-                        else:
-                            distance += end_x + (self.view.es.find(name=self.edge)['weight'] - start_x)
-                        
-                        self.nearby_curb[(kid.get('id'), round(distance,2))] = 0
-                    
-                    except:
-                        pass
+        # shortest path distance
 
-    def _update_nearby_curb(self):
+        distance = self.view.shortest_paths_dijkstra(source=self.to_junction,
+                                                     target=destination_node, 
+                                                     weights='weight', mode='OUT')[0][0]
+
+        # end_x from the last junction to destination curb
+        if dest_pos >= 0:
+            end_x = dest_pos
+        else:
+            end_x = self.view.es.find(name=target_edge)['weight'] + dest_pos
+
+        # adjust for first and last mile
+        if (self.view.es.find(name=self.edge).source == \
+            self.view.vs.find(name=self.from_junction).index) and (end_x > start_x):
+            distance = end_x - start_x
+        else:
+            distance += end_x + (self.view.es.find(name=self.edge)['weight'] - start_x)
+        
+        return distance
+
+    def _update_neigh_occupy(self, curbs):
         """
         update nearby_cub status
         """
-        # update nearby curb status during simulation
-        for curb_pair in self.nearby_curb:
-            self.nearby_curb[curb_pair] = traci.simulation.getParameter(curb_pair[0], "parkingArea.occupancy")
+
+        # update neighbor delivery + passenger occupancy
+        for curb_pair in self.neighbor:
+            assert len(curbs[curb_pair[0]].occupied_vehicle) == curbs[curb_pair[0]].dlv_cnt + curbs[curb_pair[0]].psg_cnt
+            self.neighbor[curb_pair] = [curbs[curb_pair[0]].dlv_cnt, curbs[curb_pair[0]].psg_cnt]
 
     # generate reroute suggestion
     # in the future, this can be extended to estimates of nearby curbs
-    def _reroute_choice(self):
+    def _reroute_choice(self, veh_id, curbs):
         """
         based on current status of nearby curbs
         make a reroute decision
         """ 
-        # find all available curbs with available spaces
-        available_curbs = [curb_pair for curb_pair in self.nearby_curb if self.nearby_curb[curb_pair] < traci.simulation.getParameter(curb_pair[0], "parkingArea.capacity")]
 
-        available_curbs.sort(key=operator.itemgetter(1))
+        # if delivery vehicle, only look at delivery vehicle occupancy
+        if is_dlv_veh(veh_id):
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][0] < curbs[curb_pair[0]].dlv_cap]
+        else:
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][1] < curbs[curb_pair[0]].psg_cap]
 
-        # closest available curb and associated distance
-        return available_curbs[0] 
+        if len(available_curbs) > 0:
+            # if there is available neighbor of specified type: delivery/ passenger
+            available_curbs.sort(key=operator.itemgetter(1))
 
+            # return closest available curb and associated distance
+            return available_curbs[0] 
+
+        else:
+            # if no available spots of requested type in neighbors, return a random one of them
+            return random.choice(list(self.neighbor.keys()))
+    
+    def _occupy_cnt(self):
+        """
+        update occupancy of two types of vehicles for a curb
+        """
+        # devliery vehicle count
+        self.dlv_cnt = len([veh for veh in self.occupied_vehicle if is_dlv_veh(veh)])
+        
+        # passenger vehicle count
+        self.psg_cnt = len(self.occupied_vehicle) - self.dlv_cnt
 
