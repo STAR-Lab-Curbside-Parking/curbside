@@ -38,12 +38,12 @@ def generate_route(psg_park_dm_x=1,
     generate route file for simulation
 
     Args:
-        psg_park_dm_x : int, for parking passenger vehicle demand scalding
-        dlv_park_dm_x : int
-        dlv_park_time : int
-        dlv_num : int
+        psg_park_dm_x : float, passenger veh parking demand scaleing
+        dlv_park_dm_x : float, delivery veh parking demand scaling
+        dlv_park_time : int, park duration of each delivery veh
+        dlv_num : int, base count of parking delivery veh, to be multiplied by dlv_park_dm_x
         simulate_hour : int, the hour of day to be simulated, default 12-1pm
-        seed
+        seed : int, random seed
 
     Returns:
         None (results printed to route file)
@@ -138,7 +138,7 @@ def generate_route(psg_park_dm_x=1,
 
     dlv_num *= dlv_park_dm_x
 
-    for i in range(dlv_num):
+    for i in range(int(dlv_num)):
         pa = random.choice(parking_areas) # parking area
         o = random.choice(edges_o)
         d = random.choice(edges_d)
