@@ -11,7 +11,7 @@ graph-tool is documented here (although not used): https://graph-tool.skewed.de/
 # import
 import os, sys
 import heapq
-import operator
+import operator, random
 
 import igraph
 import xml.etree.ElementTree as ET
@@ -57,7 +57,6 @@ class Curbside:
         self.edge = self.lane.split('_')[0]
         self.start_pos = start_dict['start_pos']
         self.end_pos = start_dict['end_pos']
-        self.capacity = start_dict['capacity']
         self.width = start_dict['width']
         self.from_junction = start_dict['from_junction']
         self.to_junction = start_dict['to_junction']
@@ -75,6 +74,15 @@ class Curbside:
 
         # internal schedule
         self.schedule = [None] * (24 * 12)
+        
+        # two capacities
+        self.tot_cap = start_dict['capacity']
+        self.psg_cap = self.tot_cap
+        self.dlv_cap = 0
+
+        # occupancy count
+        self.dlv_cnt = 0
+        self.psg_cnt = 0
 
     @staticmethod
     def read_curb_add(add_xml, curb_id):
@@ -185,7 +193,7 @@ class SmartCurbside(Curbside):
             road_network : igraph instance, the constructued simulation network
         
         Returns:
-            self.nearby_curb : initialized dictionary of "(neighbor curb id, distance) - occupancy" pair
+            self.neighbor : initialized dictionary of "(neighbor curb id, distance) - occupancy" pair
         """
 
         # search
@@ -258,7 +266,7 @@ class SmartCurbside(Curbside):
         self.view = road_network.subgraph(list(downstream_nodes | upstream_nodes))
 
         # find associated curbs
-        self.nearby_curb = {}
+        self.neighbor = {}
 
         # root of XML
         root = ET.parse(self.add_xml).getroot()
@@ -271,14 +279,16 @@ class SmartCurbside(Curbside):
         start_x = self.start_pos if self.start_pos > 0 else lane_length + self.start_pos
 
         # shortest path distance and end_x
+        # it seems all curbs are included in local view
         for child in root.iter('additional'):
             for kid in child.iter('parkingArea'):
                 if kid.get('id') != self.id:
                     # if the curb is in the local view
-                    # find it the edge in the edge sequence es
+                    # find the edge in the edge sequence es
                     target_edge = kid.get('lane').split('_')[0]
                     try:
-                        _ = self.view.es.find(name=target_edge)
+                        # find the source junction for the destination edge
+                        # _ = self.view.es.find(name=target_edge)
                         destination_node = self.view.es.find(name=target_edge).source
 
                         # shortest path distance
@@ -299,32 +309,59 @@ class SmartCurbside(Curbside):
                         else:
                             distance += end_x + (self.view.es.find(name=self.edge)['weight'] - start_x)
                         
-                        self.nearby_curb[(kid.get('id'), round(distance,2))] = 0
+                        # initialize local image of each neighbor
+                        # 0 delivery occupancy and 0 passenger occupancy
+                        self.neighbor[(kid.get('id'), round(distance,2))] = [0, 0]
                     
                     except:
                         pass
 
-    def _update_nearby_curb(self):
+    def _update_neigh_occup(self):
         """
         update nearby_cub status
         """
         # update nearby curb status during simulation
-        for curb_pair in self.nearby_curb:
-            self.nearby_curb[curb_pair] = traci.simulation.getParameter(curb_pair[0], "parkingArea.occupancy")
+        for curb_pair in self.neighbor:
+            assert len(xxx.occupied_vehicle) == xxx.dlv_cnt + xxx.psg_cnt
+            self.neighbor[curb_pair] = [xxx.dlv_cnt, xxx.psg_cnt]
+
 
     # generate reroute suggestion
     # in the future, this can be extended to estimates of nearby curbs
-    def _reroute_choice(self):
+    def _reroute_choice(self, veh_id):
         """
         based on current status of nearby curbs
         make a reroute decision
         """ 
-        # find all available curbs with available spaces
-        available_curbs = [curb_pair for curb_pair in self.nearby_curb if self.nearby_curb[curb_pair] < traci.simulation.getParameter(curb_pair[0], "parkingArea.capacity")]
 
-        available_curbs.sort(key=operator.itemgetter(1))
+        # if delivery vehicle, only look at delivery vehicle occupancy
+        if _is_dlv_veh(veh_id):
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][0] < xxx.dlv_cap]
+        else:
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][1] < xxx.psg_cap]
 
-        # closest available curb and associated distance
-        return available_curbs[0] 
+        if len(available_curbs) > 0:
+            # if there is available neighbor of specified type: delivery/ passenger
+            available_curbs.sort(key=operator.itemgetter(1))
 
+            # return closest available curb and associated distance
+            return available_curbs[0] 
+
+        else:
+            # if no available spots of requested type in neighbors, return a random one of them
+            return random.choice(list(self.neighbor.keys()))
+    
+    def _occupy_cnt(self):
+        """
+        update occupancy of two types of vehicles for a curb
+        """
+        # devliery vehicle count
+        self.dlv_cnt = len([veh for veh in self.occupied_vehicle if _is_dlv_veh(veh)])
+        
+        # passenger vehicle count
+        self.psg_cnt = len(self.occupied_vehicle) - self.dlv_cnt
+
+    def _is_dlv_veh(veh):
+        # return veh.startswith('t', beg=0)
+        return traci.vehicle.getVehicleClass(veh) == 'delivery'
 

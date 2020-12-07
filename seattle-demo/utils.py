@@ -31,7 +31,7 @@ rou_xml = "seattle.trips.xml"
 demand_csv = "parking_demand_dist.csv"    
 
 def generate_route(psg_park_dm_x=1, 
-                   taxi_park_dm_x=1, taxi_park_time=3*60, taxi_num=100, 
+                   dlv_park_dm_x=1, dlv_park_time=3*60, dlv_num=100, 
                    flow_num=200, 
                    simulate_hour=12, seed=2):
     """
@@ -39,9 +39,9 @@ def generate_route(psg_park_dm_x=1,
 
     Args:
         psg_park_dm_x : int, for parking passenger vehicle demand scalding
-        taxi_park_dm_x : int
-        taxi_park_time : int
-        taxi_num : int
+        dlv_park_dm_x : int
+        dlv_park_time : int
+        dlv_num : int
         simulate_hour : int, the hour of day to be simulated, default 12-1pm
         seed
 
@@ -109,7 +109,7 @@ def generate_route(psg_park_dm_x=1,
         d = random.choice(edges_d)
         dt = random.randint(1, 3600) # depart time
         pt = 10 * 60 # parking time
-        parking_config_list.append((dt, o, d, pa, pt, "park_passenger"))
+        parking_config_list.append((dt, o, d, pa, pt, "psg_park"))
 
     for i in range(int(parking_20min_num)):
         pa = random.choice(parking_areas) # parking area
@@ -117,7 +117,7 @@ def generate_route(psg_park_dm_x=1,
         d = random.choice(edges_d)
         dt = random.randint(1, 3600) # depart time
         pt = 20 * 60 # parking time
-        parking_config_list.append((dt, o, d, pa, pt, "park_passenger"))
+        parking_config_list.append((dt, o, d, pa, pt, "psg_park"))
 
     for i in range(int(parking_30min_num)):
         pa = random.choice(parking_areas) # parking area
@@ -125,7 +125,7 @@ def generate_route(psg_park_dm_x=1,
         d = random.choice(edges_d)
         dt = random.randint(1, 3600)  # depart time
         pt = 30 * 60 # parking time
-        parking_config_list.append((dt, o, d, pa, pt, "park_passenger"))
+        parking_config_list.append((dt, o, d, pa, pt, "psg_park"))
 
     for i in range(int(parking_60min_num)):
         pa = random.choice(parking_areas) # parking area
@@ -133,18 +133,18 @@ def generate_route(psg_park_dm_x=1,
         d = random.choice(edges_d)
         dt = random.randint(1, 3600)  # depart time
         pt = 60 * 60 # parking time
-        parking_config_list.append((dt, o, d, pa, pt, "park_passenger"))
+        parking_config_list.append((dt, o, d, pa, pt, "psg_park"))
 
 
-    taxi_num *= taxi_park_dm_x
+    dlv_num *= dlv_park_dm_x
 
-    for i in range(taxi_num):
+    for i in range(dlv_num):
         pa = random.choice(parking_areas) # parking area
         o = random.choice(edges_o)
         d = random.choice(edges_d)
         dt = random.randint(1, 3600) # depart time
-        pt = taxi_park_time
-        parking_config_list.append((dt, o, d, pa, pt, "taxi"))
+        pt = dlv_park_time
+        parking_config_list.append((dt, o, d, pa, pt, "dlv"))
 
     parking_config_list.sort(key=lambda tup: tup[0])  # sorts in place
 
@@ -156,9 +156,9 @@ def generate_route(psg_park_dm_x=1,
               """, 
               file=rou)
 
-        print("""\t<vType id="park_passenger" vClass="passenger" guiShape="passenger/sedan" color="255,183,59"></vType>\n
-    <vType id="pass_passenger" vClass="passenger" guiShape="passenger/hatchback" color="192,192,192"></vType>\n
-    <vType id="taxi" vClass="taxi" guiShape="truck" color="245,39,224" length="6.0" width="3"></vType>
+        print("""\t<vType id="psg_park" vClass="passenger" guiShape="passenger/sedan" color="255,183,59"></vType>\n
+    <vType id="psg_pass" vClass="passenger" guiShape="passenger/hatchback" color="192,192,192"></vType>\n
+    <vType id="dlv" vClass="delivery" guiShape="truck" color="245,39,224" length="6.0" width="3"></vType>
           """, 
           file=rou)
 
@@ -170,7 +170,7 @@ def generate_route(psg_park_dm_x=1,
                 d = d[0]
             else:
                 d = [item for item in edges_d if item[:2] == str(int(o[:2])+1)][0]
-            print('\t<flow id="f{}" begin="{}" end="{}" number="{}" from="{}" to="{}" type="pass_passenger"/>'.format(
+            print('\t<flow id="f{}" begin="{}" end="{}" number="{}" from="{}" to="{}" type="psg_pass"/>'.format(
                                                                                                i+200, 0, 2400, 
                                                                                                flow_num, 
                                                                                                o, d), 
@@ -185,7 +185,7 @@ def generate_route(psg_park_dm_x=1,
                 parking_areas_availble.remove(parking_area)
             d = random.choice(edges_d)
             parking_left_time = 3600
-            print('''\t<trip id="e_g60_{}" depart="{}" to="{}" type="park_passenger">
+            print('''\t<trip id="e_g60_{}" depart="{}" to="{}" type="psg_park">
         <stop index="0" parkingArea="{}" duration="{}" parking="true"/>
     </trip>'''.format(i, 0, d, parking_area, parking_left_time), file = rou)
         
@@ -197,13 +197,13 @@ def generate_route(psg_park_dm_x=1,
                 parking_areas_availble.remove(parking_area)
             d = random.choice(edges_d)
             parking_left_time = (60 - random.randint(1, 60)) * 60
-            print('''\t<trip id="e_l60_{}" depart="{}" to="{}" type="park_passenger">
+            print('''\t<trip id="e_l60_{}" depart="{}" to="{}" type="psg_park">
         <stop index="0" parkingArea="{}" duration="{}" parking="true"/>
     </trip>'''.format(i, 0, d, parking_area, parking_left_time), file = rou)
     
 
         # write generated parking
-        ## including passenger veh and taxis
+        ## including passenger veh and dlvs
         for i in range(len(parking_config_list)):
             dt, o, d, pa, pt, vType = parking_config_list[i]
             print('''\t<trip id="t{}" depart="{}" from="{}" to="{}" type="{}">
