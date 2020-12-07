@@ -16,18 +16,8 @@ import operator, random
 import igraph
 import xml.etree.ElementTree as ET
 
-# SUMO and traci
-if 'SUMO_HOME' in os.environ:
-    tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
-    sys.path.append(tools)
-else:
-    sys.exit("please declare environment variable 'SUMO_HOME'")
+from utils import is_dlv_veh
 
-import traci
-
-def is_dlv_veh(veh):
-    # return veh.startswith('t', beg=0)
-    return traci.vehicle.getVehicleClass(veh) == 'delivery'
 # general class
 class Curbside:
     def __init__(self, add_xml, net_xml, curb_id, vclass):
@@ -49,10 +39,6 @@ class Curbside:
         start_dict = {**start_dict, **curb_add_info, **curb_net_info}
 
         self.validate(start_dict)
-
-        # data
-        self.add_xml = start_dict['add_xml']
-        self.net_xml = start_dict['net_xml']
 
         # static attributes
         self.id = start_dict['id']
@@ -294,14 +280,9 @@ class SmartCurbside(Curbside):
         # try:
         #     _ = self.view.es.find(name=target_edge)
         # if the previous statement does not raise error then the following is executed
-        # print(target_edge)
         destination_node = self.view.es.find(name=target_edge).source
-        # print(target_edge)
-        # print(destination_node)
-        # print(self.view.vs[destination_node]['name'])
 
         # shortest path distance
-
         distance = self.view.shortest_paths_dijkstra(source=self.to_junction,
                                                      target=destination_node, 
                                                      weights='weight', mode='OUT')[0][0]

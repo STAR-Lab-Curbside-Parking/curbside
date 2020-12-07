@@ -5,6 +5,7 @@ import igraph
 import pandas as pd
 import xml.etree.ElementTree as ET
 
+import traci
 
 def create_graph(net_xml):
     road_network = igraph.Graph(directed=True)
@@ -21,18 +22,13 @@ def create_graph(net_xml):
                                       name=child.get('id'),
                                       weight=float([kid.get('length') for kid in child.iter('lane')][0]))
 
-    return road_network
-
-
-net_xml = "seattle.net.xml"
-add_xml = "seattle.add.xml"
-rou_xml = "seattle.trips.xml"
-
-demand_csv = "parking_demand_dist.csv"    
+    return road_network  
 
 def generate_route(psg_park_dm_x=1, 
                    dlv_park_dm_x=1, dlv_park_time=3*60, dlv_num=100, 
                    flow_num=200, 
+                   net_xml = "seattle.net.xml", add_xml = "seattle.add.xml", rou_xml = "seattle.trips.xml",
+                   demand_csv = "parking_demand_dist.csv",
                    simulate_hour=12, seed=2):
     """
     generate route file for simulation
@@ -214,3 +210,8 @@ def generate_route(psg_park_dm_x=1,
         print('\n</routes>', file = rou)
 
     print(rou_xml, 're-generated. (demand factor =', psg_park_dm_x, ')')
+
+
+def is_dlv_veh(veh):
+    # return veh.startswith('t', beg=0)
+    return traci.vehicle.getVehicleClass(veh) == 'delivery'
