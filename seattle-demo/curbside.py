@@ -84,8 +84,8 @@ class Curbside:
         self.dlv_cap = 0
 
         # occupancy count
-        self.dlv_cnt = 0
-        self.psg_cnt = 0
+        self.dlv_occ = 0
+        self.psg_occ = 0
 
     @staticmethod
     def read_curb_add(add_xml, curb_id):
@@ -328,8 +328,8 @@ class SmartCurbside(Curbside):
 
         # update neighbor delivery + passenger occupancy
         for curb_pair in self.neighbor:
-            assert len(curbs[curb_pair[0]].occupied_vehicle) == curbs[curb_pair[0]].dlv_cnt + curbs[curb_pair[0]].psg_cnt
-            self.neighbor[curb_pair] = [curbs[curb_pair[0]].dlv_cnt, curbs[curb_pair[0]].psg_cnt]
+            assert len(curbs[curb_pair[0]].occupied_vehicle) == curbs[curb_pair[0]].dlv_occ + curbs[curb_pair[0]].psg_occ
+            self.neighbor[curb_pair] = [curbs[curb_pair[0]].dlv_occ, curbs[curb_pair[0]].psg_occ]
 
     # generate reroute suggestion
     # in the future, this can be extended to estimates of nearby curbs
@@ -361,8 +361,8 @@ class SmartCurbside(Curbside):
         update occupancy of two types of vehicles for a curb
         """
         # devliery vehicle count
-        self.dlv_cnt = len([veh for veh in self.occupied_vehicle if is_dlv_veh(veh)])
+        self.dlv_occ = len([veh for veh in self.occupied_vehicle if is_dlv_veh(veh)])
         
         # passenger vehicle count
-        self.psg_cnt = len(self.occupied_vehicle) - self.dlv_cnt
+        self.psg_occ = len(self.occupied_vehicle) - self.dlv_occ
 
