@@ -28,9 +28,9 @@ def GenerateRoutes(demand_factor=1.0, taxi_factor=1, taxi_park_time=3*60, taxi_n
         simulate_hour : int, simulation stating time in the hour of day based on a fixed daily parking demand
         seed : int, random seed
     """
-	random.seed(seed)
+    random.seed(seed)
     
-	# get parking area info, including parkingArea IDs and capaciy
+    # get parking area info, including parkingArea IDs and capaciy
 	parking_areas = []
 	parking_areas_capacity = []
 	root_add = ET.parse(add_xml).getroot()
