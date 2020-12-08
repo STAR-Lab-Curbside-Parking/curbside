@@ -31,8 +31,10 @@ class SeattleEnv(gym.Env):
         self.control_window = 60
         
         self.reroute_total = 0
-        self.reroute_dict = dict(zip(self.curb_ids, np.zeros(len(self.curb_ids), dtype=int)))
-        self.reroute_vtype_dict = {curb_id:{'dlv':0, 'psg':0} for curb_id in self.curb_ids}
+        self.reroute_curb = dict(zip(self.curb_ids, np.zeros(len(self.curb_ids), dtype=int)))
+        self.reroute_vtype = {curb_id:{'dlv':0, 'psg':0} for curb_id in self.curb_ids}
+        self.reroute_veh = {}
+        self.reroute_limit = 3
         
     
     def _init_curbs(self):
@@ -45,7 +47,8 @@ class SeattleEnv(gym.Env):
                 curb_ids.append(kid.get('id'))
         curbs = {}
         for curb_id in curb_ids:
-            curbs[curb_id] = curbside.SmartCurbside(1, self.add_xml, self.net_xml, curb_id, ['passenger', 'delivery'], road_network)
+            curbs[curb_id] = curbside.SmartCurbside(1, self.add_xml, self.net_xml, curb_id, 
+                                                    ['passenger', 'delivery'], road_network)
         for curb in curbs.values():
             curb.find_neighborhood(road_network, curbs)
             # curb.dlv_cap = curb.tot_cap
@@ -67,6 +70,9 @@ class SeattleEnv(gym.Env):
         return traci.getConnection("sim1")
     
     def _simulate(self):
+        if self.time_step >= 13:
+            self.sim.vehicle.highlight('dlv_0', size=20)
+            
         for _ in range(self.control_window):
             self.sim.simulationStep()
             self.time_step += 1
@@ -76,36 +82,54 @@ class SeattleEnv(gym.Env):
                 v_enter = set(self.sim.edge.getLastStepVehicleIDs(curb.edge)) - curb.moving_vehicle
                 for veh in v_enter:
                     if self.sim.vehicle.getNextStops(veh) \
-                        and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)] \
-                        and not self.sim.vehicle.isStopped(veh):
-                        # if the trips is not ending and the current edge is the parking stop, v_leave should be excluded
-                        # vclass: passenger or delivery
-                        vclass = self.sim.vehicle.getVehicleClass(veh)
-                        if vclass == 'delivery':
-                            occ = curb.dlv_occ
-                            cap = curb.dlv_cap
-                        else:
-                            occ = curb.psg_occ
-                            cap = curb.psg_cap
-                        if occ < cap:
-                            # if can park, add to occupied set : planned + parked
-                            curb.occupied_vehicle.add(veh)
-                        else:
-                            # cannot park at this edge, reroute
-                            # item._reroute_choice() returns (curb_id, distance) tuple
-                            reroute_msg = curb._reroute_choice(veh, self.curbs)
-                            self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
-                            
-                            self.reroute_total += 1
-                            self.reroute_dict[curb.id] += 1
-                            if vclass == 'delivery':
-                                self.reroute_vtype_dict[curb.id]['dlv'] += 1
-                            else:
-                                self.reroute_vtype_dict[curb.id]['psg'] += 1
+                        and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
 
-                            # reroute_msg = curb._reroute_choice(veh, curbs)
-                            # traci.vehicle.rerouteParkingArea(veh, reroute_msg[0])
-                            # reroute_cost[curb_id] += reroute_msg[1]
+                        # if parking area is in future stop list
+                        # check stop duration > 1
+                        stop_idx = [item[2] for item in self.sim.vehicle.getNextStops(veh)].index(curb.id)
+                        if [item[4] for item in self.sim.vehicle.getNextStops(veh)][stop_idx] > 1:
+
+                            # if trip is not ending and the current edge is the parking stop, v_leave should be excluded
+                            # vclass: passenger or delivery
+                            vclass = self.sim.vehicle.getVehicleClass(veh)
+                            if vclass == 'delivery':
+                                occ = curb.dlv_occ
+                                cap = curb.dlv_cap
+                            else:
+                                occ = curb.psg_occ
+                                cap = curb.psg_cap
+                            if occ < cap:
+                                # if can park, add to occupied set : planned + parked
+                                curb.occupied_vehicle.add(veh)
+                            else:
+                                # cannot park at this edge, reroute
+                                # item._reroute_choice() returns (curb_id, distance) tuple
+                                reroute_msg = curb._reroute_choice(veh, self.curbs)
+
+                                # track reroute num per veh
+                                if veh in self.reroute_veh:
+                                    self.reroute_veh[veh] += 1
+                                else:
+                                    self.reroute_veh[veh] = 1
+                                
+                                self.reroute_total += 1
+                                self.reroute_curb[curb.id] += 1
+                                if vclass == 'delivery':
+                                    self.reroute_vtype[curb.id]['dlv'] += 1
+                                else:
+                                    self.reroute_vtype[curb.id]['psg'] += 1
+
+                                # actually reroute
+                                if self.reroute_veh[veh] > self.reroute_limit:
+                                    # leave
+                                    self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
+                                    # self.sim.vehicle.highlight(veh, size=20)
+                                    print(veh)
+                                    print(self.sim.vehicle.getNextStops(veh))
+                                else:
+                                    self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
+
+                                # reroute_cost[curb_id] += reroute_msg[1]
                             
                 # v_leave : parked vehicle of last time step - parked vehicle at this time step
                 v_leave = curb.parked_vehicle - set(self.sim.parkingarea.getVehicleIDs(curb.id))
@@ -119,6 +143,7 @@ class SeattleEnv(gym.Env):
                 curb._occupy_cnt()
 
     def control(self, actions):
+        # use this to ensure sequence is matched
         for i in range(len(self.curb_ids)):
             curb = self.curbs[self.curb_ids[i]]
             action = actions[i]
@@ -149,10 +174,10 @@ class Policy:
     def __init__(self, curb_ids):
         self.curb_ids = curb_ids
         
-    def forward(self, reroute_vtype_dict):
+    def forward(self, reroute_vtype):
         actions = []
         for curb_id in self.curb_ids:
-            reroute_dict = reroute_vtype_dict[curb_id]
+            reroute_dict = reroute_vtype[curb_id]
             if reroute_dict['dlv'] > reroute_dict['psg']:
                 action = 1 # delivery vehicle space +1
             elif reroute_dict['dlv'] < reroute_dict['psg']:
