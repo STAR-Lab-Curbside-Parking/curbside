@@ -164,7 +164,7 @@ def generate_route(psg_park_dm_x=1,
             else:
                 d = [item for item in edges_d if item[:2] == str(int(o[:2])+1)][0]
             print('\t<flow id="f{}" begin="{}" end="{}" number="{}" from="{}" to="{}" type="pass"/>'.format(
-                                                                                               i+200, 0, 2400, 
+                                                                                               i+200, 0, 3600, 
                                                                                                flow_num, 
                                                                                                o, d), 
                   file=rou)

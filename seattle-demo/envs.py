@@ -129,7 +129,8 @@ class SeattleEnv(gym.Env):
                                     self.sim.vehicle.highlight(veh, size=20)
                                     # ask it to leave
                                     print(self.sim.vehicle.getNextStops(veh))
-                                    self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
+#                                     self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
+                                    self.sim.vehicle.setParkingAreaStop(veh, stopID=curb.id, duration=0)
                                     print(self.sim.vehicle.getNextStops(veh))
                                 else:
                                     self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
@@ -172,22 +173,6 @@ class SeattleEnv(gym.Env):
         return done
 
     def terminate(self):
-        self.sim.close()
+        traci.close()
 
 
-class Policy:
-    def __init__(self, curb_ids):
-        self.curb_ids = curb_ids
-        
-    def forward(self, reroute_vtype):
-        actions = []
-        for curb_id in self.curb_ids:
-            reroute_dict = reroute_vtype[curb_id]
-            if reroute_dict['dlv'] > reroute_dict['psg']:
-                action = 1 # delivery vehicle space +1
-            elif reroute_dict['dlv'] < reroute_dict['psg']:
-                action = -1 # passenger vehicle space +1
-            else:
-                action = 0
-            actions.append(action)
-        return actions
