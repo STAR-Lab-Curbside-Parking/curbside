@@ -19,7 +19,7 @@
     <parkingArea id="03-24-SW" lane="03-24-SE_0" startPos="10" endPos="50" roadsideCapacity="6" angle="0" />
     <parkingArea id="03-25-NE" lane="03-25-NW_0" startPos="10" endPos="50" roadsideCapacity="10" angle="0" />
     <parkingArea id="03-25-SW" lane="03-25-SE_0" startPos="10" endPos="50" roadsideCapacity="10" angle="0" />
-    <parkingArea id="03-26-SW" lane="03-26-SE_0" startPos="10" endPos="50" roadsideCapacity="1" angle="0" />
+    <parkingArea id="03-26-SW" lane="03-26-SE_0" startPos="10" endPos="50" roadsideCapacity="2" angle="0" />
     <parkingArea id="04-24-NE" lane="04-24-NW_0" startPos="10" endPos="50" roadsideCapacity="10" angle="0" />
     <parkingArea id="04-24-SW" lane="04-24-NW_0" startPos="10" endPos="50" roadsideCapacity="4" angle="0" />
     <parkingArea id="04-25-NE" lane="04-25-NW_0" startPos="10" endPos="50" roadsideCapacity="10" angle="0" />

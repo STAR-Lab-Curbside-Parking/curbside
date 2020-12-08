@@ -66,8 +66,8 @@ class Curbside:
         
         # two capacities
         self.tot_cap = start_dict['capacity']
-        self.psg_cap = self.tot_cap
-        self.dlv_cap = 0
+        self.psg_cap = self.tot_cap - 1
+        self.dlv_cap = 1
 
         # occupancy count
         self.dlv_occ = 0

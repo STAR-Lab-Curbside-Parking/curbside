@@ -70,8 +70,10 @@ class SeattleEnv(gym.Env):
         return traci.getConnection("sim1")
     
     def _simulate(self):
-        if self.time_step >= 13:
-            self.sim.vehicle.highlight('dlv_0', size=20)
+        # if self.time_step >= 13:
+        #     self.sim.vehicle.highlight('dlv_0', size=20)
+        #     print(self.sim.vehicle.getNextStops('dlv_0'))
+        #     sys.stdout.flush()
             
         for _ in range(self.control_window):
             self.sim.simulationStep()
@@ -119,12 +121,15 @@ class SeattleEnv(gym.Env):
                                 else:
                                     self.reroute_vtype[curb.id]['psg'] += 1
 
+                                if veh == 'dlv_0':
+                                    print(curb.id)
                                 # actually reroute
-                                if self.reroute_veh[veh] > self.reroute_limit:
-                                    # leave
+                                if self.reroute_veh[veh] >= self.reroute_limit:
+                                    # hilight
+                                    self.sim.vehicle.highlight(veh, size=20)
+                                    # ask it to leave
+                                    print(self.sim.vehicle.getNextStops(veh))
                                     self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
-                                    # self.sim.vehicle.highlight(veh, size=20)
-                                    print(veh)
                                     print(self.sim.vehicle.getNextStops(veh))
                                 else:
                                     self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
@@ -156,7 +161,7 @@ class SeattleEnv(gym.Env):
                 curb.psg_cap += 1
                 curb.dlv_cap -= 1
     
-    def step(self, actions, seconds):
+    def batch(self, actions, seconds):
         self.control(actions)
         self._simulate()
         print('reroute total:', self.reroute_total)
