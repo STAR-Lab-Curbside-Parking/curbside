@@ -82,6 +82,10 @@ class SeattleEnv(gym.Env):
             
         for _ in range(self.control_window):
             self.sim.simulationStep()
+            
+#             if 'psg_310' in self.sim.simulation.getDepartedIDList():
+#                 self.sim.vehicle.highlight('psg_310', size=20)
+
             self.time_step += 1
             for curb in self.curbs.values():
                 curb._update_neigh_occupy(self.curbs)
@@ -108,6 +112,8 @@ class SeattleEnv(gym.Env):
                             if occ < cap:
                                 # if can park, add to occupied set : planned + parked
                                 curb.occupied_vehicle.add(veh)
+                                # update curb occ and cap
+                                curb._occupy_cnt()
                             else:
                                 # cannot park at this edge, reroute
                                 # item._reroute_choice() returns (curb_id, distance) tuple
@@ -126,11 +132,9 @@ class SeattleEnv(gym.Env):
                                 else:
                                     self.reroute_vtype[curb.id]['psg'] += 1
 
-#                                 if veh == 'dlv_0':
-#                                     print(curb.id)
-                                if curb.id == '02-26-SW':
-                                    if curb.psg_occ >= 8:
-                                        print(curb.psg_occ, curb.psg_cap, curb.dlv_occ, curb.dlv_cap)
+
+#                                 if curb.id == '02-26-SW':
+#                                     print(curb.psg_occ, curb.psg_cap, curb.dlv_occ, curb.dlv_cap)
                                 # actually reroute
                                 if self.reroute_veh[veh] >= self.reroute_limit:
                                     # hilight
