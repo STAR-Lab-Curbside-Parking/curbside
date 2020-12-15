@@ -36,6 +36,11 @@ class SeattleEnv(gym.Env):
         self.reroute_veh = {}
         self.reroute_limit = 3
         
+        self.failed_parking = 0
+        self.failed_parking_psg = 0
+        self.failed_parking_dlv = 0
+        
+        
     
     def _init_curbs(self):
         road_network = utils.create_graph(self.net_xml)
@@ -121,17 +126,25 @@ class SeattleEnv(gym.Env):
                                 else:
                                     self.reroute_vtype[curb.id]['psg'] += 1
 
-                                if veh == 'dlv_0':
-                                    print(curb.id)
+#                                 if veh == 'dlv_0':
+#                                     print(curb.id)
+                                if curb.id == '02-26-SW':
+                                    if curb.psg_occ >= 8:
+                                        print(curb.psg_occ, curb.psg_cap, curb.dlv_occ, curb.dlv_cap)
                                 # actually reroute
                                 if self.reroute_veh[veh] >= self.reroute_limit:
                                     # hilight
                                     self.sim.vehicle.highlight(veh, size=20)
                                     # ask it to leave
-                                    print(self.sim.vehicle.getNextStops(veh))
+#                                     print(self.sim.vehicle.getNextStops(veh))
 #                                     self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
                                     self.sim.vehicle.setParkingAreaStop(veh, stopID=curb.id, duration=0)
-                                    print(self.sim.vehicle.getNextStops(veh))
+#                                     print(self.sim.vehicle.getNextStops(veh))
+                                    self.failed_parking += 1 # number of failed parking + 1
+                                    if vclass == 'delivery':
+                                        self.failed_parking_dlv += 1
+                                    else:
+                                        self.failed_parking_psg += 1
                                 else:
                                     self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
 
@@ -165,7 +178,7 @@ class SeattleEnv(gym.Env):
     def batch(self, actions, seconds):
         self.control(actions)
         self._simulate()
-        print('reroute total:', self.reroute_total)
+#         print('reroute total:', self.reroute_total)
 
         done = False
         if self.time_step >= seconds:

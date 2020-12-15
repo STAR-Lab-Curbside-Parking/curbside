@@ -205,7 +205,7 @@ def generate_route(psg_park_dm_x=1,
         # write end of file
         print('\n</routes>', file = rou)
 
-    print(rou_xml, 're-generated. (demand factor =', psg_park_dm_x, ')')
+#     print(rou_xml, 're-generated. (demand factor =', psg_park_dm_x, ')')
 
 
 def is_dlv_veh(veh):
