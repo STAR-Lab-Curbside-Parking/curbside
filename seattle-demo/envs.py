@@ -19,12 +19,13 @@ import traci
 
 class SeattleEnv(gym.Env):
     
-    def __init__(self, net_xml, add_xml, rou_xml, gui=False):
+    def __init__(self, net_xml, add_xml, rou_xml, dlv_prc, psg_prc, gui=False):
         self.net_xml = net_xml
         self.add_xml = add_xml
         self.rou_xml = rou_xml
         self.curbs, self.curb_ids = self._init_curbs()
         self.gui = gui
+        self.curr_episode = 0
         self.sim = self._init_sim(self.gui)
         
         self.time_step = 0
@@ -36,10 +37,13 @@ class SeattleEnv(gym.Env):
         self.reroute_veh = {}
         self.reroute_limit = 3
         
-        self.failed_parking = 0
-        self.failed_parking_psg = 0
-        self.failed_parking_dlv = 0
+        self.failed_total = 0
+        self.failed_vtype = {curb_id:{'dlv':0, 'psg':0} for curb_id in self.curb_ids}
         
+        self.dlv_prc = dlv_prc
+        self.psg_prc = psg_prc
+        
+        self.reroute_vtype_step = {curb_id:{'dlv':0, 'psg':0} for curb_id in self.curb_ids}
         
     
     def _init_curbs(self):
@@ -75,16 +79,12 @@ class SeattleEnv(gym.Env):
         return traci.getConnection("sim1")
     
     def _simulate(self):
-        # if self.time_step >= 13:
-        #     self.sim.vehicle.highlight('dlv_0', size=20)
-        #     print(self.sim.vehicle.getNextStops('dlv_0'))
-        #     sys.stdout.flush()
             
         for _ in range(self.control_window):
             self.sim.simulationStep()
             
-#             if 'psg_310' in self.sim.simulation.getDepartedIDList():
-#                 self.sim.vehicle.highlight('psg_310', size=20)
+            # if 'psg_310' in self.sim.simulation.getDepartedIDList():
+            #     self.sim.vehicle.highlight('psg_310', size=20)
 
             self.time_step += 1
             for curb in self.curbs.values():
@@ -92,8 +92,9 @@ class SeattleEnv(gym.Env):
                 # check if there is any vehicle enters
                 v_enter = set(self.sim.edge.getLastStepVehicleIDs(curb.edge)) - curb.moving_vehicle
                 for veh in v_enter:
-                    if self.sim.vehicle.getNextStops(veh) \
-                        and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
+                    if not veh.startswith('f', 0, 1)\
+                       and self.sim.vehicle.getNextStops(veh) \
+                       and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
 
                         # if parking area is in future stop list
                         # check stop duration > 1
@@ -112,7 +113,8 @@ class SeattleEnv(gym.Env):
                             if occ < cap:
                                 # if can park, add to occupied set : planned + parked
                                 curb.occupied_vehicle.add(veh)
-                                # update curb occ and cap
+                                # update curb occ and cap immediately when a vehicle is accepted
+                                # multiple vehicles can enter in the same second
                                 curb._occupy_cnt()
                             else:
                                 # cannot park at this edge, reroute
@@ -129,27 +131,24 @@ class SeattleEnv(gym.Env):
                                 self.reroute_curb[curb.id] += 1
                                 if vclass == 'delivery':
                                     self.reroute_vtype[curb.id]['dlv'] += 1
+                                    self.reroute_vtype_step[curb.id]['dlv'] += 1
                                 else:
                                     self.reroute_vtype[curb.id]['psg'] += 1
+                                    self.reroute_vtype_step[curb.id]['psg'] += 1
 
-
-#                                 if curb.id == '02-26-SW':
-#                                     print(curb.psg_occ, curb.psg_cap, curb.dlv_occ, curb.dlv_cap)
                                 # actually reroute
                                 if self.reroute_veh[veh] >= self.reroute_limit:
-                                    # hilight
                                     self.sim.vehicle.highlight(veh, size=20)
                                     # ask it to leave
-#                                     print(self.sim.vehicle.getNextStops(veh))
-#                                     self.sim.vehicle.rerouteTraveltime(veh, currentTravelTimes=True)
                                     self.sim.vehicle.setParkingAreaStop(veh, stopID=curb.id, duration=0)
-#                                     print(self.sim.vehicle.getNextStops(veh))
-                                    self.failed_parking += 1 # number of failed parking + 1
+                                    
+                                    self.failed_total += 1 # number of failed parking + 1
                                     if vclass == 'delivery':
-                                        self.failed_parking_dlv += 1
+                                        self.failed_vtype[curb.id]['dlv'] += 1
                                     else:
-                                        self.failed_parking_psg += 1
+                                        self.failed_vtype[curb.id]['psg'] += 1
                                 else:
+                                    # if does not reach reroute limit
                                     self.sim.vehicle.rerouteParkingArea(veh, reroute_msg[0])
 
                                 # reroute_cost[curb_id] += reroute_msg[1]
@@ -165,6 +164,42 @@ class SeattleEnv(gym.Env):
                 # update two-type occupancy for next time step
                 curb._occupy_cnt()
 
+    def _get_state(self):
+        """
+        retrieve state of each curb
+        includes its state tuple (dlv_occ, psg_occ, dlv_cap, psg_cap) and all of its neighbors'
+        ensure the output state size is 12
+        """
+        
+        state = []
+        
+        for i in range(len(self.curb_ids)):
+            curb = self.curbs[self.curb_ids[i]]
+            # first row: dlv reroute
+            tmp = np.ones(4) * self.reroute_vtype_step[self.curb_ids[i]]['dlv']
+            # second row: psg reroute
+            tmp = np.vstack((tmp, np.ones(4) * self.reroute_vtype_step[self.curb_ids[i]]['psg']))
+            # third row self occupancy and capacity
+            tmp = np.vstack((tmp, np.array([curb.dlv_occ, curb.psg_occ, curb.dlv_cap, curb.psg_cap])))
+            # onward: neighbors occupancy and capacity
+            for _, neighbor_condition in curb.neighbor.items():
+                tmp = np.vstack((tmp, np.array(neighbor_condition)))
+            
+            while tmp.shape[0] < 12:
+                tmp = np.vstack((tmp, np.zeros(4)))
+            
+            state.append(tmp)
+
+        return state
+    
+    def _get_reward(self):
+        
+        reward = {}
+        for curb_id in self.reroute_vtype_step:
+            reward[curb_id] = self.dlv_prc * self.reroute_vtype_step[curb_id]['dlv'] + self.psg_prc * self.reroute_vtype_step[curb_id]['psg']
+        
+        return reward
+    
     def control(self, actions):
         # use this to ensure sequence is matched
         for i in range(len(self.curb_ids)):
@@ -181,14 +216,27 @@ class SeattleEnv(gym.Env):
     
     def batch(self, actions, seconds):
         self.control(actions)
+        
+        self.reroute_vtype_step = {curb_id:{'dlv':0, 'psg':0} for curb_id in self.curb_ids}
+        
         self._simulate()
-#         print('reroute total:', self.reroute_total)
+        
+        state = self._get_state()
+        reward = self._get_reward()
+        global_reward = sum(reward.values())
 
         done = False
+        # if accumulated batch reaches the simulation time, then simulation should be over
         if self.time_step >= seconds:
             done = True
-        return done
+        return done, state, reward, global_reward
 
+    def reset(self):
+        self.time_step = 0
+        self.curr_episode += 1
+        
+        return self._get_state()
+    
     def terminate(self):
         traci.close()
 

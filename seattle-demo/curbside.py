@@ -256,7 +256,7 @@ class SmartCurbside(Curbside):
         
         # start_x
         lane_length = self.view.es.find(name=self.edge)['weight']
-        start_x = self.start_pos if self.start_pos > 0 else lane_length + self.start_pos
+        start_x = self.start_pos if self.start_pos >= 0 else lane_length + self.start_pos
 
         # shortest path distance and end_x
         # it seems all curbs are included in local view
@@ -265,12 +265,13 @@ class SmartCurbside(Curbside):
             if self.id != curb_id:
                 if option == "whole":
                     distance = self._roadway_dist(start_x, float(curb.start_pos), curb.edge)
-                    self.neighbor[(curb_id, round(distance,2))] = [0, 0]
+                    self.neighbor[(curb_id, round(distance,2))] = [0, 0, curb.dlv_cap, curb.psg_cap] # dlv_occ, psg_occ, dlv_cap, psg_cap
                 else:
-                    # nearest
+                    # nearest neighbors are those who share from/to junction with the current curb
+                    # technically, this is not the one-hop curb neighbors, but the curbs on nearest edges
                     if len(set([curb.from_junction, curb.to_junction]).intersection(set([self.from_junction, self.to_junction]))) > 0:
                         distance = self._roadway_dist(start_x, float(curb.start_pos), curb.edge)
-                        self.neighbor[(curb_id, round(distance, 2))] = [0, 0]
+                        self.neighbor[(curb_id, round(distance, 2))] = [0, 0, curb.dlv_cap, curb.psg_cap] # dlv_occ, psg_occ, dlv_cap, psg_cap
 
     def _roadway_dist(self, start_x, dest_pos, target_edge):
         """
@@ -294,8 +295,7 @@ class SmartCurbside(Curbside):
             end_x = self.view.es.find(name=target_edge)['weight'] + dest_pos
 
         # adjust for first and last mile
-        if (self.view.es.find(name=self.edge).source == \
-            self.view.vs.find(name=self.from_junction).index) and (end_x > start_x):
+        if (destination_node == self.view.vs.find(name=self.from_junction).index) and (end_x > start_x):
             distance = end_x - start_x
         else:
             distance += end_x + (self.view.es.find(name=self.edge)['weight'] - start_x)
@@ -310,7 +310,7 @@ class SmartCurbside(Curbside):
         # update neighbor delivery + passenger occupancy
         for curb_pair in self.neighbor:
             assert len(curbs[curb_pair[0]].occupied_vehicle) == curbs[curb_pair[0]].dlv_occ + curbs[curb_pair[0]].psg_occ
-            self.neighbor[curb_pair] = [curbs[curb_pair[0]].dlv_occ, curbs[curb_pair[0]].psg_occ]
+            self.neighbor[curb_pair] = [curbs[curb_pair[0]].dlv_occ, curbs[curb_pair[0]].psg_occ, curbs[curb_pair[0]].dlv_cap, curbs[curb_pair[0]].psg_cap]
 
     # generate reroute suggestion
     # in the future, this can be extended to estimates of nearby curbs
@@ -322,9 +322,9 @@ class SmartCurbside(Curbside):
 
         # if delivery vehicle, only look at delivery vehicle occupancy
         if is_dlv_veh(veh_id):
-            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][0] < curbs[curb_pair[0]].dlv_cap]
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][0] < self.neighbor[curb_pair][2]]
         else:
-            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][1] < curbs[curb_pair[0]].psg_cap]
+            available_curbs = [curb_pair for curb_pair in self.neighbor if self.neighbor[curb_pair][1] < self.neighbor[curb_pair][3]]
 
         if len(available_curbs) > 0:
             # if there is available neighbor of specified type: delivery/ passenger
