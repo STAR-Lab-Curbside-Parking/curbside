@@ -1,6 +1,6 @@
-import time
-import numpy as np
 from itertools import product
+import numpy as np
+import time
 
 import curbside
 import utils
@@ -13,7 +13,7 @@ ROU_XML = "seattle.trips.xml"
 
 env = envs.SeattleEnv(NET_XML, ADD_XML, ROU_XML, dlv_prc=5, psg_prc=1, gui=False)
 policy = generator.Policy(env.curb_ids, policy_name='nn')
-state =env._get_state()
+state = env._get_state()
 
 res = {}
 res['rewards'] = []
