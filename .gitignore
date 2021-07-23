@@ -2,3 +2,4 @@
 .ipynb_checkpoints/
 fcd.xml
 __pycache__/
+.vscode
