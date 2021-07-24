@@ -45,7 +45,7 @@ class SeattleEnv(gym.Env):
             self.curbs, self.curb_ids = self._init_curbs(option='whole')
             self.skip_dest = {}
         else:
-            self.control_window = 60
+            self.control_window = 10
             self.curbs, self.curb_ids = self._init_curbs(option='nearest')
         
         # reroute and failed metrics
@@ -418,5 +418,6 @@ class SeattleEnv(gym.Env):
     
     def terminate(self):
         traci.close()
+        self.close()
 
 
