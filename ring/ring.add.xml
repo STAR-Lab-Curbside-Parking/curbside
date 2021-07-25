@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+
+    <location netOffset="0.00,0.00" convBoundary="-20.00,-20.00,120.00,120.00" origBoundary="-10000000000.00,-10000000000.00,10000000000.00,10000000000.00" projParameter="!"/>
+    
+    <parkingArea id="P01" lane="E01_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
+    <parkingArea id="P12" lane="E12_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
+    <parkingArea id="P23" lane="E23_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
+    <parkingArea id="P30" lane="E30_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
+
+</additional>
