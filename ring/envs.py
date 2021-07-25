@@ -36,8 +36,6 @@ class RingEnv(gym.Env):
 
         self.curbs = self._init_curbs()
         self.sim = self._init_sim(self.GUI)
-
-        self.v_edge = set()
         
         self.demand = {key:{'cv':0, 'ncv':0} for key in self.curbs}
 
@@ -94,12 +92,8 @@ class RingEnv(gym.Env):
         for curb in self.curbs.values():
             curb._update_neigh_occupy(self.curbs)
             
-            # check if there is any vehicle enters
-            v_enter = set(self.sim.edge.getLastStepVehicleIDs(curb.edge)).difference(self.v_edge)
-            self.v_edge = set(self.sim.edge.getLastStepVehicleIDs(curb.edge))
+            v_enter = set([item[0] for item in self.sim.inductionloop.getVehicleData("L" + curb.id[1:])])
             
-            print(v_enter)
-
             for veh in v_enter:
                 
                 # vehicle entering can be of 3 types (b, ncv, cv)
@@ -107,15 +101,13 @@ class RingEnv(gym.Env):
                 # for those passers-by, do nothing
                 if not veh.startswith('b', 0, 1)\
                    and self.sim.vehicle.getNextStops(veh) \
-                   and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
+                   and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)] \
+                   and veh not in curb.parked_veh:
 
                     # only consider those early in the lane
-                    if self.sim.vehicle.getLanePosition(veh) < curb.start_pos:
-
-                        # vehicle from last t is duplicated
-                        print("Hello")
-                        print(curb.parked_veh)
-                        assert veh not in curb.parked_veh
+                    # and also when they first entered the lane
+                    # so the threshold for detection distance should be small but significant enough
+                    if self.sim.vehicle.getLanePosition(veh) < 5:
                         
                         # vclass: passenger or delivery
                         vclass = self.sim.vehicle.getVehicleClass(veh)
@@ -129,6 +121,7 @@ class RingEnv(gym.Env):
                         if occ < cap:
                             
                             # if can park, add to occupied set : planned + parked
+                            # never remove vehicle from list!!!
                             curb.parked_veh.add(veh)
                             # update curb occ and cap immediately when a vehicle is accepted
                             # multiple vehicles can enter in the same second
@@ -143,6 +136,9 @@ class RingEnv(gym.Env):
 
                             # reroute to neighbor curb
                             self.sim.vehicle.rerouteParkingArea(veh, reroute_curb)
+
+                            # highlight
+                            self.sim.vehicle.highlight(veh, size=10)
                             
                             
             # update parked vehicle set

@@ -62,7 +62,7 @@ class smart_curb:
         offer reroute suggestion, always return the immediate downstream in the ring setting
         """ 
 
-        return self.neighbor
+        return list(self.neighbor.keys())[0]
     
     def _occupy_cnt(self):
         """

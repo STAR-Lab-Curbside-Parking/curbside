@@ -30,7 +30,7 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
         d = "E" + curb_id[1:]
 
         # need to implement demand curve
-        park_demand = 10 * 3600 / min(ncv_pd, cv_pd) * park2curb
+        park_demand = 10 * 3600 / max(ncv_pd, cv_pd) * park2curb
         background_flow = int(park_demand * background2park)
 
         cv_demand = park_demand * cv2ncv_pf / (1 + cv2ncv_pf)
@@ -58,7 +58,7 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
 
         print("""\t<vType id="ncv" vClass="passenger" guiShape="passenger/sedan" color="255,183,59"></vType>\n
     <vType id="f" vClass="passenger" guiShape="passenger/hatchback" color="192,192,192"></vType>\n
-    <vType id="cv" vClass="delivery" guiShape="truck" color="245,39,224"></vType>
+    <vType id="cv" vClass="passenger" guiShape="evehicle" color="245,39,224"></vType>
           """, 
           file=rou)
 

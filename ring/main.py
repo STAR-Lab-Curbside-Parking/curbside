@@ -14,7 +14,7 @@ ROU_XML = "ring.trips.xml"
 
 def main():
     
-    utils.generate_route(park2curb=1, background2park=2, cv2ncv_pf=1, cv2ncv_pd=0.5)
+    utils.generate_route(park2curb=0.5, background2park=2, cv2ncv_pf=1, cv2ncv_pd=0.5)
     env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=10, gui=True)
     while True:
         env._simulate()

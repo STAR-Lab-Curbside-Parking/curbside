@@ -9,4 +9,9 @@
     <parkingArea id="P23" lane="E23_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
     <parkingArea id="P30" lane="E30_0" startPos="35" endPos="65" roadsideCapacity="10" angle="0" />
 
+    <inductionLoop id="L01" lane="E01_0" pos="0" freq="900" file="out.xml"/>
+    <inductionLoop id="L12" lane="E12_0" pos="0" freq="900" file="out.xml"/>
+    <inductionLoop id="L23" lane="E23_0" pos="0" freq="900" file="out.xml"/>
+    <inductionLoop id="L30" lane="E30_0" pos="0" freq="900" file="out.xml"/>
+
 </additional>
