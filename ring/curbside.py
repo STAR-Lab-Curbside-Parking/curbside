@@ -32,6 +32,10 @@ class smart_curb:
         # downstream neighbor
         self.neighbor = {"P" + self.id[-1] + str((int(self.id[1]) + 2) % 4): [0,0,0,0]}
         
+        # cruising distance
+        self.full_dist = None
+        self.cv_dist = None
+
         # two capacities
         self.tot_cap = capacity
         self.ncv_cap = self.tot_cap - 1
@@ -41,6 +45,8 @@ class smart_curb:
         self.cv_occ = 0
         self.ncv_occ = 0
 
+        # accepted but not yet arrived
+        self.accepted_veh = set()
         # physically parked vehicle set
         self.parked_veh = set()
 
@@ -60,17 +66,23 @@ class smart_curb:
     def _reroute_choice(self, veh_id, curbs):
         """
         offer reroute suggestion, always return the immediate downstream in the ring setting
+
+        @params veh_id : str, id of veh to be rerouted, not used in ring implementation
+        @params curbs : list of curbs in the systen, not used in ring implementation
+
+        @reutrns downstream neighbor
         """ 
 
         return list(self.neighbor.keys())[0]
     
     def _occupy_cnt(self):
         """
-        update occupancy of two types of vehicles for a curb
+        update occupancy for a curb, including cv and non-cv
         """
         # devliery vehicle count
-        self.cv_occ = len([veh for veh in self.parked_veh if is_cv_veh(veh)])
+        self.cv_occ = len([veh for veh in self.parked_veh if is_cv_veh(veh)]) + \
+                      len([veh for veh in self.accepted_veh if is_cv_veh(veh)])
         
         # passenger vehicle count
-        self.ncv_occ = len(self.parked_veh) - self.cv_occ
+        self.ncv_occ = len(self.parked_veh) + len(self.accepted_veh) - self.cv_occ
 

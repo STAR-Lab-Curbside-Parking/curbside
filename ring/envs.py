@@ -1,9 +1,9 @@
-import curbside
-import gym
-import numpy as np
+import gym, numpy as np, random
 import os, sys
-import xml.etree.ElementTree as ET
 
+import curbside
+
+random.seed(0)
 
 if sys.platform == "win32":
     # windows, win32
@@ -22,7 +22,14 @@ class RingEnv(gym.Env):
     
     def __init__(self, net_xml, add_xml, rou_xml, window=10, gui=False):
         """
-        initialization
+        initialization of object
+
+        @params net_xml : str, path to SUMO network file
+        @params add_xml : str, path to SUMO additional facility file, \
+            where parking areas are induction loops are defined for simulation
+        @params rou_xml : str, path to SUMO route file, vehicle routes defined there
+        @params window : int, control window length, e.g., control every 10 seconds
+        @params gui : bollean, if simulation runs with gui or not
         """
         
         # general info
@@ -42,7 +49,7 @@ class RingEnv(gym.Env):
 
     def _init_curbs(self):
         """
-        initialize the curbs and how they find their neighbors on the defined network
+        initialize the curb objects in simulation
         """
 
         curb_ids = ['P01', 'P12', 'P23', 'P30']
@@ -55,10 +62,10 @@ class RingEnv(gym.Env):
     
     def _init_sim(self, gui):
         """
-        initialize simulation
+        initialize simulation in SUMO, accounting for different OS
 
-        Args:
-            gui : boolean, whether to run the simulation with gui
+        @params gui : boolean, whether to run the simulation with gui
+        @returns : simulation connection labelled by user
         """
         if sys.platform == "win32":
             if self.GUI:
@@ -75,6 +82,9 @@ class RingEnv(gym.Env):
         return traci.getConnection("sim")
     
     def _simulate(self):
+        """
+        simulate for the defined window length
+        """
             
         for _ in range(self.WINDOW):
             
@@ -86,12 +96,29 @@ class RingEnv(gym.Env):
             
     def _micro(self):
         """
-        control the parking game via curbs, but need to tell each vehicle what to do
+        control vehicle parking movements microscopically
+        this serves as the physical maneuvers behind the scene
+
+        that said, even if our controllers are curbs, we still need to define our vehicles park
+
+        presumably, this micro control is conducted at the finest time granularity
+
+        @params 
+        @returns
         """
         
         for curb in self.curbs.values():
+            # obtain vehicles that are already parked or accepted but not yet arrived
+            curb.parked_veh = self.sim.parkingarea.getVehicleIDs(curb.id)
+            # those who have arrived are not in accepted mode any more
+            curb.accepted_veh = curb.accepted_veh.difference(curb.parked_veh)
+
+            # update occupancy for self and self's record of neighbors
+            # note accepted vehicles are also occupying spaces even if they have not arrived
+            curb._occupy_cnt()
             curb._update_neigh_occupy(self.curbs)
             
+            # collect vehicles that arrived at the induction loop at the edge
             v_enter = set([item[0] for item in self.sim.inductionloop.getVehicleData("L" + curb.id[1:])])
             
             for veh in v_enter:
@@ -102,69 +129,99 @@ class RingEnv(gym.Env):
                 if not veh.startswith('b', 0, 1)\
                    and self.sim.vehicle.getNextStops(veh) \
                    and curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)] \
-                   and veh not in curb.parked_veh:
-
-                    # only consider those early in the lane
-                    # and also when they first entered the lane
-                    # so the threshold for detection distance should be small but significant enough
-                    if self.sim.vehicle.getLanePosition(veh) < 5:
+                   and veh not in curb.accepted_veh and veh not in curb.parked_veh:
+                   
+                   # notice last two filter make sure the vehicle have not been considered
+                   # if the vehicle has been rejected, then this curb should not be in the stop list
+                   # if the vehicle has been accepted, then the filter filters it out
                         
-                        # vclass: passenger or delivery
-                        vclass = self.sim.vehicle.getVehicleClass(veh)
-                        if vclass == 'delivery':
-                            occ = curb.cv_occ
-                            cap = curb.cv_cap
-                        else:
-                            occ = curb.ncv_occ
-                            cap = curb.ncv_cap
-                            
-                        if occ < cap:
-                            
-                            # if can park, add to occupied set : planned + parked
-                            # never remove vehicle from list!!!
-                            curb.parked_veh.add(veh)
-                            # update curb occ and cap immediately when a vehicle is accepted
-                            # multiple vehicles can enter in the same second
-                            curb._occupy_cnt()
+                    # vclass: passenger or delivery
+                    vclass = self.sim.vehicle.getVehicleClass(veh)
+                    if vclass == 'delivery':
+                        occ = curb.cv_occ
+                        cap = curb.cv_cap
+                    else:
+                        occ = curb.ncv_occ
+                        cap = curb.ncv_cap
+                        
+                    if occ < cap: # if allowed to park physically
+                        
+                        # add to accepted list
+                        curb.accepted_veh.add(veh)
+                        # update curb occ and cap immediately when a vehicle is accepted
+                        # this is multiple vehicles can enter in the same second
+                        curb._occupy_cnt()
 
-                        else: # not enough space at this curb
+                    else: # not enough space at this curb
 
-                            reroute_curb = curb._reroute_choice(veh, self.curbs)
-                            
-                            # change destination to next exit
-                            self.sim.vehicle.changeTarget(veh, "E" + reroute_curb[1:])
+                        # produce reroute suggestion
+                        reroute_curb = curb._reroute_choice(veh, self.curbs)
+                        
+                        # change destination to next exit
+                        self.sim.vehicle.changeTarget(veh, "E" + reroute_curb[1:])
 
-                            # reroute to neighbor curb
-                            self.sim.vehicle.rerouteParkingArea(veh, reroute_curb)
+                        # reroute to neighbor curb
+                        self.sim.vehicle.rerouteParkingArea(veh, reroute_curb)
 
-                            # highlight
-                            self.sim.vehicle.highlight(veh, size=10)
+                        # highlight in gui mode
+                        if self.GUI:
+                            self.sim.vehicle.highlight(veh, color=(255, 0, 255), size=10)
                             
-                            
-            # update parked vehicle set
-            # assert curb.parked_veh == set(self.sim.parkingarea.getVehicleIDs(curb.id))
-            curb._occupy_cnt()
             
     def _get_state(self):
         """
-        retrieve state of each curb
-        includes its state tuple (cv_occ, ncv_occ, cv_cap, ncv_cap) and all of its neighbors'
-        ensure the output state size is 12
+        retrieve state of each curb: pressure, cv_occ, ncv_occ, cv_cap, ncv_cap
 
-        needs design 07.22
+        pressure: borrowed from traffic signal control, i.e., cumulative/average delay
         """
         
         state = []
         
-        for i in range(len(self.curbs)):
+        for i in ['P01', 'P12', 'P23', 'P30']:
             curb = self.curbs[i]
 
+            # obtain vehicle from current previous curb edge
+            # note in simple cases, vehicles on other edges cannot be considering parking at this curb
+            veh_curr_edge = self.sim.edge.getLastStepVehicleIDs(curb.edge)
+            veh_prev_edge = self.sim.edge.getLastStepVehicleIDs("E" + str((int(curb.edge[1]) + 3) % 4) + curb.edge[1])
+            veh_list = veh_curr_edge + veh_prev_edge
+
+            # obtain the list of vehicles planning to park here
+            veh_arriving = []
+            for veh in veh_list:
+                if curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
+                    veh_arriving.append(veh)
+
+            # obtain driving distance (1) of all parking vehicles, and (2) of only cvs
+            full_dist = cv_dist = 0
+            full_cnt = cv_cnt = 0
+            for veh in veh_arriving:
+                if veh.startswith('cv', 0, 2):
+                    cv_dist += self.sim.vehicle.getDistance(veh)
+                    cv_cnt += 1
+                full_dist += self.sim.vehicle.getDistance(veh)
+                full_cnt += 1
+
+            # compute avereage driving distance of all and of only cvs
+            full_avg_dist = full_dist / full_cnt if full_cnt > 0 else 0
+            cv_avg_dist = cv_dist / cv_cnt if cv_cnt > 0 else 0
+
+            # compile state for the curb and append it to state
             tmp = np.array([self.TIME, 
-                            # average driving distance by vehicles
+                            # number of vehicles just served?
+                            full_cnt,
+                            cv_cnt,
+                            # average cruising distance by arriving vehicles
                             # critic sees CV + non-CV: cv and ncv
+                            full_avg_dist,
+                            cv_avg_dist,
                             curb.cv_occ, curb.ncv_occ, curb.cv_cap, curb.ncv_cap])
             
             state.append(tmp)
+
+            # save derived cruising distance to instance for reward calculation later
+            curb.full_dist = full_dist
+            curb.cv_dist = cv_dist
 
         return state
     
@@ -174,11 +231,12 @@ class RingEnv(gym.Env):
         """
         reward = []
         # reroute is collected for reward calculation
-        for i in range(len(self.curbs)):
+        for i in ['P01', 'P12', 'P23', 'P30']:
             curb = self.curbs[i]
 
             # reward is calculated of both CV + non-CV: cv and ncv
-            reward.append()
+            # curb.full_dist, curb.cv_dist
+            reward.append((curb.full_dist, curb.cv_dist))
 
         return reward
     
@@ -204,13 +262,11 @@ class RingEnv(gym.Env):
         """
         perform control and collect information every batch of seconds
 
-        Args:
-            actions : dictionary, actions associated with each curb agent, computed outside of the env
+        
+        @params actions : dictionary, actions associated with each curb agent, computed outside of the env
 
-        Returns:
-            state : dictionary, state of each curb agent
-            reward : dictionary, reward of each curb agent
-            global_reward : global_reward
+        @returns state : dictionary, state of each curb agent
+        @returns reward : dictionary, reward of each curb agent
         """
         
         self.control(actions)
@@ -228,6 +284,9 @@ class RingEnv(gym.Env):
 
     
     def terminate(self):
+        """
+        end simulation
+        """
         traci.close()
         self.close()
 

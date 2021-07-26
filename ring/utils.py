@@ -2,6 +2,8 @@ import random
 import pandas as pd
 import xml.etree.ElementTree as ET
 
+random.seed(0)
+
 def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
                    demand_curve='flat',
                    route_xml='ring.rou.xml'):
@@ -15,8 +17,7 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
     @params cv2ncv_pd : float, ratio of cv to non-cv in parking duration
     @params route_xml : string, route file to write to
 
-    Returns:
-        None (results printed to route file)
+    @return 
     """
     
     random.seed(0)
@@ -63,9 +64,11 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
           file=rou)
 
         # write background flow
-        print('\t<flow id="back" begin="{}" end="{}" number="{}" from="{}" to="{}" type="f"/>'.\
-              format(0, 3700, background_flow, "E01", "E30"), 
-              file=rou)
+        for i in range(4):
+            print('\t<flow id="back_{}" begin="{}" end="{}" number="{}" from="{}" to="{}" type="f"/>'.\
+                format(i, 0, 3700, background_flow, "A{}".format(i), "E{}{}".format((i + 4 - 1)%4, i)), 
+                file=rou)
+        
     
         # write generated parking
         for i in range(len(park_record)):
@@ -79,5 +82,11 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
 
 
 def is_cv_veh(veh):
+    """
+    detemines if vehicle is cv by its id
+
+    @params veh : str, veh id
+    @ return : if the veh is cv or not
+    """
     return veh.startswith('cv', 0, 2)
     # return traci.vehicle.getVehicleClass(veh) == 'delivery'

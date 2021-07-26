@@ -1,12 +1,12 @@
 import numpy as np
-import time
+import random, time
 import torch
 import torch.nn.functional as F
 from torch.distributions import Categorical
 
-import curbside
-import utils
-import envs
+import agent, curbside, envs, utils
+
+random.seed(0)
 
 NET_XML = "ring.net.xml"
 ADD_XML = "ring.add.xml"
@@ -14,13 +14,16 @@ ROU_XML = "ring.trips.xml"
 
 def main():
     
-    utils.generate_route(park2curb=0.5, background2park=2, cv2ncv_pf=1, cv2ncv_pd=0.5)
+    utils.generate_route(park2curb=0.8, background2park=1, cv2ncv_pf=1, cv2ncv_pd=0.5)
     env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=10, gui=True)
-    while True:
-        env._simulate()
+    # while True:
+    #     env._simulate()
+    #     env._get_state()
+    #     env._get_reward()
 
-    # curb_agents = {k : generator.A2C() for k in env.curb_ids} 
-    # s = env._get_state()
+    curb_agents = {k : agent.A2C() for k in ['P01', 'P12', 'P23', 'P30']} 
+    s = env._get_state()
+    print(s)
 
     # for epoch in range(10):
 
