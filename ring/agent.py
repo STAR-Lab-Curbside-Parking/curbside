@@ -1,3 +1,10 @@
+'''
+agent.py
+---------------------------------------------------------------
+This file defines controllers for each curb
+
+'''
+
 import torch
 import torch.nn as nn
 from torch import optim
@@ -6,7 +13,7 @@ from torch.autograd import Variable
 
 # A2C
 class A2C(nn.Module):
-    def __init__(self, input_dim=7, hidden_dim=16, num_actions=3):
+    def __init__(self, input_dim=9, hidden_dim=16, num_actions=3):
         super(A2C, self).__init__()
 
         self.fc = nn.Sequential(nn.Linear(input_dim, hidden_dim), 
@@ -38,12 +45,12 @@ class A2C(nn.Module):
         self.policy, self.value = self.forward(s)
         _, v_prime = self.forward(s_prime)
 
-        td_target = r + self.gamma * v_prime.data
+        td_target = r[0] + self.gamma * v_prime.data
         advantage = td_target - self.value.data
 
         probs = F.softmax(self.policy, dim=0)
         log_probs = F.log_softmax(self.policy, dim=0)
-        log_action_probs = log_probs.gather(0, Variable(a + 1))
+        log_action_probs = log_probs.gather(0, torch.tensor(a + 1))
 
         policy_loss = (-log_action_probs * advantage).sum()
         value_loss = (.5 * advantage ** 2).sum() # (self.value - r)

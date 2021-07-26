@@ -244,16 +244,16 @@ class RingEnv(gym.Env):
         """
         perform control of the curbs
         """
-
+        id_list = ['P01', 'P12', 'P23', 'P30']
         # use this to ensure sequence is matched
-        for i in range(len(self.curbs)):
-            curb = self.curbs[i]
+        for i in range(len(id_list)):
+            curb = self.curbs[id_list[i]]
             action = actions[i]
-            if action == 1 and curb.ncv_occ < curb.ncv_cap:
+            if action == 1 and curb.ncv_cap > 0 and curb.ncv_occ < curb.ncv_cap:
                 # delivery vehicle space +1
                 curb.ncv_cap -= 1
                 curb.cv_cap += 1
-            elif action == -1 and curb.cv_occ < curb.cv_cap:
+            elif action == -1 and curb.cv_cap > 0 and curb.cv_occ < curb.cv_cap:
                 # passenger vehicle space +1
                 curb.ncv_cap += 1
                 curb.cv_cap -= 1
