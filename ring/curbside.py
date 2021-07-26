@@ -38,8 +38,8 @@ class smart_curb:
 
         # two capacities
         self.tot_cap = capacity
-        self.ncv_cap = self.tot_cap - 1
         self.cv_cap = 1
+        self.ncv_cap = self.tot_cap - self.cv_cap
 
         # occupancy count
         self.cv_occ = 0

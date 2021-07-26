@@ -2,6 +2,7 @@ import gym, numpy as np, random
 import os, sys
 
 import curbside
+from utils import is_cv_veh
 
 random.seed(0)
 
@@ -136,8 +137,7 @@ class RingEnv(gym.Env):
                    # if the vehicle has been accepted, then the filter filters it out
                         
                     # vclass: passenger or delivery
-                    vclass = self.sim.vehicle.getVehicleClass(veh)
-                    if vclass == 'delivery':
+                    if is_cv_veh(veh):
                         occ = curb.cv_occ
                         cap = curb.cv_cap
                     else:
@@ -153,6 +153,8 @@ class RingEnv(gym.Env):
                         curb._occupy_cnt()
 
                     else: # not enough space at this curb
+
+                        print(is_cv_veh(veh), occ, cap)
 
                         # produce reroute suggestion
                         reroute_curb = curb._reroute_choice(veh, self.curbs)
@@ -208,7 +210,6 @@ class RingEnv(gym.Env):
 
             # compile state for the curb and append it to state
             tmp = np.array([self.TIME, 
-                            # number of vehicles just served?
                             full_cnt,
                             cv_cnt,
                             # average cruising distance by arriving vehicles
