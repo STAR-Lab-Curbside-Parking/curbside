@@ -55,3 +55,16 @@ main.py
 ```
 
 Inspired by paper [CVLight](https://arxiv.org/pdf/2104.10340.pdf), we collect CV and non-CV information separately. Their state info could be used differently in some RL models, e.g., the critic in actor-critic knows more than the actor. Feel free to use the currently included metrics, or design others.
+
+Next, we introduce some key parameters that determine the uncertainties in the simulation
++ parking demand by `utils.generate_route()`:
+    - `park2curb`: ratio of parking demand to curb space capacities. Capacity of infrastructure is estimated for per hour roughly by `total time/ average parking duration * number of curb slot`
+    - `background2park`: ratio of background traffic to parking traffic
+    - `cv2ncv_pf`: ratio of cv flow to non-cv flow in the parking demand
+    - `cv2ncv_pd`: ratio of parking duration of a cv to that of a non-cv
+    - `demand_curve`: shape of demand curve; currently only flat/constant demand is implemented
++ initial curb space allocation by `curbside.__init__()`:
+    - `capacity=10`: capacity of all 4 curbs are set as **10**. This choice is made for reproducibility
+    - `cv_cap=5`: initial space allocation for cv out of `capacity=10` possible. This could be a topic for sensitivity and robustness discussion.
++ length of control window by `env.WINDOW`:
+    - 
