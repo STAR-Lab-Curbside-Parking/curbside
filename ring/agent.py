@@ -13,6 +13,9 @@ from torch.autograd import Variable
 
 # A2C
 class A2C(nn.Module):
+    """
+    initialize instance
+    """
     def __init__(self, input_dim=9, hidden_dim=16, num_actions=3):
         super(A2C, self).__init__()
 
@@ -30,7 +33,9 @@ class A2C(nn.Module):
         self.value = None
 
     def forward(self, state):
-
+        """
+        forward
+        """
         x = self.fc(torch.from_numpy(state).float())
 
         pi_out = self.pi(x)

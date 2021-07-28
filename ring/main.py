@@ -41,9 +41,9 @@ def main():
                 a = Categorical(probs).sample() - 1
 
                 actions.append(a)
-            print(actions)
-            # state is vector of 9 elements: time, full_cnt, cv_cnt, fll_avg_dist, cv_avg_dist, cv_occ, ncv_occ, cv_cap, ncv_cap
-            # reward is tuple of 2 elements: full_dist, cv_dist
+
+            # state is vector of 8 elements: full_arrival, cv_arrival, full_avg_reroute, cv_avg_reroute, cv_occ, ncv_occ, cv_cap, ncv_cap
+            # reward is tuple of 2 elements: full_rereuote, cv_reroute
             # depends on agent design, can use different elements for training
 
             s_prime, r = env.batch(actions)
