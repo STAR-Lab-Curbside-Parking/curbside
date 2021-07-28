@@ -15,7 +15,7 @@ class smart_curb:
     smart curb class: a subclass of general curbside
     """
 
-    def __init__(self, curb_id, capacity=10):
+    def __init__(self, curb_id, capacity=10, cv_cap=5):
         """
         initialize instance
         Args:
@@ -38,7 +38,7 @@ class smart_curb:
 
         # two capacities
         self.tot_cap = capacity
-        self.cv_cap = 1
+        self.cv_cap = cv_cap
         self.ncv_cap = self.tot_cap - self.cv_cap
 
         # occupancy count
@@ -49,6 +49,7 @@ class smart_curb:
         self.accepted_veh = set()
         # physically parked vehicle set
         self.parked_veh = set()
+
 
     def __eq__(self, other):
         return self.id == other.id

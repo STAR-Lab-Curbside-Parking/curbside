@@ -47,6 +47,11 @@ class RingEnv(gym.Env):
         
         self.demand = {key:{'cv':0, 'ncv':0} for key in self.curbs}
 
+        # reroute
+        # should be a dictionary of {[curb_id, time] : (cv reroute, ncv reroute)}
+        self.reroute_cnt = {(-1, curb_id):{'cv':0, 'ncv':0} for curb_id in self.curbs.keys()}
+        # self.reroute_veh = {(0, curb_id):[] for curb_id in self.curbs.keys()}
+        self.arrival_cnt = {(-1, curb_id):{'cv':0, 'ncv':0} for curb_id in self.curbs.keys()}
 
     def _init_curbs(self):
         """
@@ -82,6 +87,53 @@ class RingEnv(gym.Env):
         traci.start([sumoBinary, "-c", "ring.sumocfg", "--time-to-teleport", "-1"], label="sim")
         return traci.getConnection("sim")
     
+    def batch(self, actions):
+        """
+        perform control and collect information every batch of seconds
+
+        
+        @params actions : dictionary, actions associated with each curb agent, computed outside of the env
+
+        @returns state : dictionary, state of each curb agent
+        @returns reward : dictionary, reward of each curb agent
+        """
+        
+        self.control(actions)
+
+        for curb_id in self.curbs.keys():
+            self.reroute_cnt[(self.TIME//self.WINDOW, curb_id)] = {'cv':0, 'ncv':0}
+            # self.reroute_veh[(self.TIME // self.WINDOW, curb_id)] = []
+            self.arrival_cnt[(self.TIME//self.WINDOW, curb_id)] = {'cv':0, 'ncv':0}
+
+        # _simulate() wraps for (control_window) steps behind the scene
+        self._simulate()
+
+        # state is the most recent
+        # reward is calculated based on reroute per batch
+
+        state = self._get_state()
+        reward = self._get_reward()
+
+        return state, reward 
+    
+    def control(self, actions):
+        """
+        perform control of the curbs
+        """
+        id_list = ['P01', 'P12', 'P23', 'P30']
+        # use this to ensure sequence is matched
+        for i in range(len(id_list)):
+            curb = self.curbs[id_list[i]]
+            action = actions[i]
+            if action == 1 and curb.ncv_cap > 0 and curb.ncv_occ < curb.ncv_cap:
+                # delivery vehicle space +1
+                curb.ncv_cap -= 1
+                curb.cv_cap += 1
+            elif action == -1 and curb.cv_cap > 0 and curb.cv_occ < curb.cv_cap:
+                # passenger vehicle space +1
+                curb.ncv_cap += 1
+                curb.cv_cap -= 1
+
     def _simulate(self):
         """
         simulate for the defined window length
@@ -91,9 +143,10 @@ class RingEnv(gym.Env):
             
             self.sim.simulationStep()
 
-            self.TIME += 1
-
+            # the physical interactions happened in this second
             self._micro()
+
+            self.TIME += 1
             
     def _micro(self):
         """
@@ -135,7 +188,14 @@ class RingEnv(gym.Env):
                    # notice last two filter make sure the vehicle have not been considered
                    # if the vehicle has been rejected, then this curb should not be in the stop list
                    # if the vehicle has been accepted, then the filter filters it out
-                        
+
+                    if is_cv_veh(veh):
+                        # print(self.TIME)
+                        # print(self.arrival_cnt.keys())
+                        self.arrival_cnt[(self.TIME//self.WINDOW, curb.id)]['cv'] += 1
+                    else:
+                        self.arrival_cnt[(self.TIME//self.WINDOW, curb.id)]['ncv'] += 1
+
                     # vclass: passenger or delivery
                     if is_cv_veh(veh):
                         occ = curb.cv_occ
@@ -154,8 +214,12 @@ class RingEnv(gym.Env):
 
                     else: # not enough space at this curb
 
-                        print(is_cv_veh(veh), occ, cap)
+                        if is_cv_veh(veh):
+                            self.reroute_cnt[(self.TIME//self.WINDOW, curb.id)]['cv'] += 1
+                        else:
+                            self.reroute_cnt[(self.TIME//self.WINDOW, curb.id)]['ncv'] += 1
 
+                        # self.reroute_veh[(self.TIME//self.WINDOW, curb.id)].append(veh)
                         # produce reroute suggestion
                         reroute_curb = curb._reroute_choice(veh, self.curbs)
                         
@@ -182,47 +246,71 @@ class RingEnv(gym.Env):
         for i in ['P01', 'P12', 'P23', 'P30']:
             curb = self.curbs[i]
 
-            # obtain vehicle from current previous curb edge
-            # note in simple cases, vehicles on other edges cannot be considering parking at this curb
-            veh_curr_edge = self.sim.edge.getLastStepVehicleIDs(curb.edge)
-            veh_prev_edge = self.sim.edge.getLastStepVehicleIDs("E" + str((int(curb.edge[1]) + 3) % 4) + curb.edge[1])
-            veh_list = veh_curr_edge + veh_prev_edge
+            # arrivals
+            # print(self.TIME, self.arrival_cnt.keys())
+            arrival = self.arrival_cnt[((self.TIME-1)//self.WINDOW, i)]
+            full_arrival = arrival['cv'] + arrival['ncv']
+            cv_arrival = arrival['cv']
 
-            # obtain the list of vehicles planning to park here
-            veh_arriving = []
-            for veh in veh_list:
-                if curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
-                    veh_arriving.append(veh)
+            # rerouted vehicles' id are stored, "cv_i", "ncv_j"
+            # full_reroute_veh_cnt = len([item for item in self.reroute_veh[((self.TIME - 1) // self.WINDOW, i)]])
+            # cv_reroute_veh_cnt = len([item for item in self.reroute_veh[((self.TIME - 1) // self.WINDOW, i)] if is_cv_veh(item)])
 
-            # obtain driving distance (1) of all parking vehicles, and (2) of only cvs
-            full_dist = cv_dist = 0
-            full_cnt = cv_cnt = 0
-            for veh in veh_arriving:
-                if veh.startswith('cv', 0, 2):
-                    cv_dist += self.sim.vehicle.getDistance(veh)
-                    cv_cnt += 1
-                full_dist += self.sim.vehicle.getDistance(veh)
-                full_cnt += 1
+            reroute = self.reroute_cnt[((self.TIME-1)//self.WINDOW, i)]
+            
+            full_avg_reroute = (reroute['cv'] + reroute['ncv']) / full_arrival if full_arrival > 0 else 0 # full_reroute_veh_cnt
+            cv_avg_reroute = reroute['cv'] / cv_arrival if cv_arrival > 0 else 0 # cv_reroute_veh_cnt
 
-            # compute avereage driving distance of all and of only cvs
-            full_avg_dist = full_dist / full_cnt if full_cnt > 0 else 0
-            cv_avg_dist = cv_dist / cv_cnt if cv_cnt > 0 else 0
-
-            # compile state for the curb and append it to state
-            tmp = np.array([self.TIME, 
-                            full_cnt,
-                            cv_cnt,
+            tmp = np.array([# self.TIME//self.WINDOW, 
+                            full_arrival,
+                            cv_arrival,
                             # average cruising distance by arriving vehicles
                             # critic sees CV + non-CV: cv and ncv
-                            full_avg_dist,
-                            cv_avg_dist,
+                            full_avg_reroute,
+                            cv_avg_reroute,
                             curb.cv_occ, curb.ncv_occ, curb.cv_cap, curb.ncv_cap])
+
+            # # obtain vehicle from current previous curb edge
+            # # note in simple cases, vehicles on other edges cannot be considering parking at this curb
+            # veh_curr_edge = self.sim.edge.getLastStepVehicleIDs(curb.edge)
+            # veh_prev_edge = self.sim.edge.getLastStepVehicleIDs("E" + str((int(curb.edge[1]) + 3) % 4) + curb.edge[1])
+            # veh_list = veh_curr_edge + veh_prev_edge
+
+            # # obtain the list of vehicles planning to park here
+            # veh_arriving = []
+            # for veh in veh_list:
+            #     if curb.id in [item[2] for item in self.sim.vehicle.getNextStops(veh)]:
+            #         veh_arriving.append(veh)
+
+            # # obtain driving distance (1) of all parking vehicles, and (2) of only cvs
+            # full_dist = cv_dist = 0
+            # full_cnt = cv_cnt = 0
+            # for veh in veh_arriving:
+            #     if veh.startswith('cv', 0, 2):
+            #         cv_dist += self.sim.vehicle.getDistance(veh)
+            #         cv_cnt += 1
+            #     full_dist += self.sim.vehicle.getDistance(veh)
+            #     full_cnt += 1
+
+            # # compute avereage driving distance of all and of only cvs
+            # full_avg_dist = full_dist / full_cnt if full_cnt > 0 else 0
+            # cv_avg_dist = cv_dist / cv_cnt if cv_cnt > 0 else 0
+
+            # # compile state for the curb and append it to state
+            # tmp = np.array([self.TIME, 
+            #                 full_cnt,
+            #                 cv_cnt,
+            #                 # average cruising distance by arriving vehicles
+            #                 # critic sees CV + non-CV: cv and ncv
+            #                 full_avg_dist,
+            #                 cv_avg_dist,
+            #                 curb.cv_occ, curb.ncv_occ, curb.cv_cap, curb.ncv_cap])
             
             state.append(tmp)
 
-            # save derived cruising distance to instance for reward calculation later
-            curb.full_dist = full_dist
-            curb.cv_dist = cv_dist
+            # # save derived cruising distance to instance for reward calculation later
+            # curb.full_dist = full_dist
+            # curb.cv_dist = cv_dist
 
         return state
     
@@ -236,54 +324,12 @@ class RingEnv(gym.Env):
             curb = self.curbs[i]
 
             # reward is calculated of both CV + non-CV: cv and ncv
-            # curb.full_dist, curb.cv_dist
-            reward.append((curb.full_dist, curb.cv_dist))
+            # reward.append((curb.full_dist, curb.cv_dist))
+            reroute = self.reroute_cnt[((self.TIME-1)//self.WINDOW, i)]
+            reward.append((reroute['cv'] + reroute['ncv'], reroute['cv']))
 
         return reward
-    
-    def control(self, actions):
-        """
-        perform control of the curbs
-        """
-        id_list = ['P01', 'P12', 'P23', 'P30']
-        # use this to ensure sequence is matched
-        for i in range(len(id_list)):
-            curb = self.curbs[id_list[i]]
-            action = actions[i]
-            if action == 1 and curb.ncv_cap > 0 and curb.ncv_occ < curb.ncv_cap:
-                # delivery vehicle space +1
-                curb.ncv_cap -= 1
-                curb.cv_cap += 1
-            elif action == -1 and curb.cv_cap > 0 and curb.cv_occ < curb.cv_cap:
-                # passenger vehicle space +1
-                curb.ncv_cap += 1
-                curb.cv_cap -= 1
-    
-    def batch(self, actions):
-        """
-        perform control and collect information every batch of seconds
 
-        
-        @params actions : dictionary, actions associated with each curb agent, computed outside of the env
-
-        @returns state : dictionary, state of each curb agent
-        @returns reward : dictionary, reward of each curb agent
-        """
-        
-        self.control(actions)
-
-        # _simulate() wraps for (control_window) steps behind the scene
-        self._simulate()
-
-        # state is the most recent
-        # reward is calculated based on reroute per batch
-
-        state = self._get_state()
-        reward = self._get_reward()
-
-        return state, reward
-
-    
     def terminate(self):
         """
         end simulation
