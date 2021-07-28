@@ -8,9 +8,10 @@ Simulation is built on [SUMO](https://sumo.dlr.de/docs/index.html), because it i
 
 The goal of this project is to dynamically manage curb resources to better accomodate on-street parking demand, by various types of vehicles, e.g., **cv vs non-cv**, and **delivery vs passenger**. This demand challenges current curbside management system because the parking durations can be drastically different (think of ridesharing vehicles picking up passengers vs private vehicles parking on-street) Conflicts, in both spatial and temporal domain, exist between maximizing individual utilities against system-level optimum.
 
-During the discussions since Jan 2021, we think there are three parties in this game: management center, vehicles, and the curbs (infrastructure). There are essentially 2 basic angles to look at this problem
+During the discussions since Jan 2021, we think there are three parties in this game: management center, vehicles, and the curbs (infrastructure). There are some basic angles to look at this problem
 + **solve for an optimal matching decision**, which the center makes, that considers spatiotemporal features of the game and matches the two sides of the curbside parking market optimally.
 + **control infrastructure**, i.e., curbside spaces, to adjust the spaces within each of them to accomodate the vehicular parking demand. For example, at `time 0`, 5 spaces are for CV and 3 are for non-CV; then at `time 1`, the space allocation can be adjusted to 4 spaces for CV and 4 for non-CV. The infrastructure performed this action (`-1` for CV space) probably because it seems more non-CVs are not served.
++ ...
 
 This repo is performing the second - controlling the curbs space allocations - to answer the curbside parking problem.
 
@@ -36,7 +37,7 @@ Answering these questions, we built a simple set-up that is more configurable an
 
 This environment has the latest efforts. Its file system is similar to those in the **seattle-demo**.
 + XMLs: define the SUMO simulation
-+ Python:
++ Python: more detailed comments are in the files.
     - `main.py`: main iteration
     - `utils.py`: functions that prepare for simulation, e.g., route generation.
     - `envs.py`: defines the physical world - how vehicles move, request parking, are rejected and rerouted.
