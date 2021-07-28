@@ -52,3 +52,5 @@ main.py
 |
 |-- utils.py
 ```
+
+Inspired by paper [CVLight](https://arxiv.org/pdf/2104.10340.pdf), we collect CV and non-CV information separately. Their state info could be used differently in some RL models, e.g., the critic in actor-critic knows more than the actor. Feel free to use the currently included metrics, or design others.
