@@ -67,4 +67,4 @@ Next, we introduce some key parameters that determine the uncertainties in the s
     - `capacity=10`: capacity of all 4 curbs are set as **10**. This choice is made for reproducibility
     - `cv_cap=5`: initial space allocation for cv out of `capacity=10` possible. This could be a topic for sensitivity and robustness discussion.
 + length of control window by `env.WINDOW`:
-    - 
+    - `window=10` is passed to `envs.RingEnv()` when creating the instance. This should be tuned to a reasonable value. Our simulation is downscaled from real world, except for vehicle speed. Therefore, too short a control window is not practical, while too long a control window does not agree well with the downscaled nature.
