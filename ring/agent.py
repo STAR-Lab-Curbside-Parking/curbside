@@ -3,68 +3,155 @@ agent.py
 ---------------------------------------------------------------
 This file defines controllers for each curb
 
+Check out the following for building A() and C() separately
+https://github.com/MrSyee/pg-is-all-you-need/blob/master/01.A2C.ipynb
 '''
-
+import numpy as np
+import random
 import torch
 import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
-from torch.autograd import Variable
+from torch.distributions import Categorical
 
-# A2C
-class A2C(nn.Module):
-    """
-    initialize instance
-    """
-    def __init__(self, input_dim=9, hidden_dim=16, num_actions=3):
-        super(A2C, self).__init__()
+import utils
 
-        self.fc = nn.Sequential(nn.Linear(input_dim, hidden_dim), 
-                                nn.ReLU())
-        self.pi = nn.Linear(hidden_dim, num_actions)
-        self.v = nn.Sequential(nn.Linear(hidden_dim, hidden_dim), 
-                               nn.ReLU(),
-                               nn.Linear(hidden_dim, 1))
+torch.manual_seed(0)
+np.random.seed(0)
+random.seed(0)
 
-        self.gamma = 0.9
-        self.optimizer = optim.Adam(self.parameters(), lr=0.001)
+def init(module, weight_init, bias_init, gain=1):
+    weight_init(module.weight.data, gain=gain)
+    bias_init(module.bias.data)
+    return module
 
-        self.policy = None
-        self.value = None
+init_layer = lambda m: init(m, nn.init.orthogonal_, lambda x: nn.init.constant_(x, 0), \
+             nn.init.calculate_gain('relu'))
+
+class Actor(nn.Module):
+    def __init__(self, in_dim, out_dim, width, num_layer):
+        """Initialize."""
+        super(Actor, self).__init__()
+        
+        self.net = nn.Sequential(
+            init_layer(nn.Linear(in_dim, width)), nn.ReLU(),
+            init_layer(nn.Linear(width, width)), nn.ReLU(),
+            # init_layer(nn.Linear(width, width)), nn.ReLU(),
+            nn.Linear(width, out_dim)
+        )
 
     def forward(self, state):
         """
-        forward
+        state here must be interpreted list
         """
-        x = self.fc(torch.from_numpy(state).float())
+        pi_out = self.net(state)
+        
+        return pi_out
+    
+class Critic(nn.Module):
+    def __init__(self, in_dim, width, num_layer):
+        """Initialize."""
+        super(Critic, self).__init__()
+        
+        self.net = nn.Sequential(
+            init_layer(nn.Linear(in_dim, width)), nn.ReLU(),
+            init_layer(nn.Linear(width, width)), nn.ReLU(),
+            # init_layer(nn.Linear(width, width)), nn.ReLU(),
+            nn.Linear(width, 1)
+        )
 
-        pi_out = self.pi(x)
-        v_out = self.v(x)
+    def forward(self, state):
+        """Forward method implementation."""
+        v_out = self.net(state)
+        
+        return v_out
 
-        return pi_out, v_out
+class A2C:
+    """
+    initialize instance
+    """
+    def __init__(self, gamma, learning_rate, batch_size=64):
+        super(A2C, self).__init__()
 
-    def train(self, s, a, r, s_prime):
+        self.gamma = gamma
+        self.learning_rate = learning_rate
+        self.batch_size = batch_size
+
+        self.entropy_weight = 0.8
+
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
+
+        self.actor = Actor(in_dim=6, out_dim=3, width=2*6, num_layer=3).to(self.device)
+        self.critic = Critic(in_dim=6, width=2*6, num_layer=3).to(self.device)
+
+        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=learning_rate)
+        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=learning_rate)
+
+        self.actor_scheduler = optim.lr_scheduler.ExponentialLR(self.actor_optimizer, self.gamma)
+        self.critic_scheduler = optim.lr_scheduler.ExponentialLR(self.critic_optimizer, self.gamma)
+
+    def train(self, b, batch_mode=True):
         """
         train agent from environment feedback
         """
-        self.policy, self.value = self.forward(s)
-        _, v_prime = self.forward(s_prime)
 
-        td_target = r[0] + self.gamma * v_prime.data
-        advantage = td_target - self.value.data
+        s, a, r, s_prime = b
 
-        probs = F.softmax(self.policy, dim=0)
-        log_probs = F.log_softmax(self.policy, dim=0)
-        log_action_probs = log_probs.gather(0, torch.tensor(a + 1))
+        # update critic (value network)
+        ## mask = 0 is usually used for terminal state
+        ## in our simulation we don't have a terminal state
+        mask = 1
 
-        policy_loss = (-log_action_probs * advantage).sum()
-        value_loss = (.5 * advantage ** 2).sum() # (self.value - r)
-        entropy_loss = (log_probs * probs).sum()
+        if batch_mode:
+            full_s = torch.cat([item.unsqueeze(-1) for item in s[0]], dim=1).float().to(self.device)
+            cv_s = torch.cat([item.unsqueeze(-1) for item in s[1]], dim=1).float().to(self.device)
 
-        loss = policy_loss + value_loss + entropy_loss
+            full_next_s = torch.cat([item.unsqueeze(-1) for item in s_prime[0]], dim=1).float().to(self.device)
+            # cv_next_s = torch.cat([item.unsqueeze(-1) for item in s_prime[1]], dim=1).to(self.device)
 
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
+            # a = a.unsqueeze(-1)
+            r = r.unsqueeze(-1)
+
+        else:
+            full_s = torch.FloatTensor(s[0]).to(self.device)
+            cv_s = torch.FloatTensor(s[1]).to(self.device)
+
+            full_next_s = torch.FloatTensor(s_prime[0]).to(self.device)
+            cv_next_s = torch.FloatTensor(s_prime[1]).to(self.device)
+
+        pred_value = self.critic(full_s)
+        targ_value = r + self.gamma * self.critic(full_next_s) * mask
+        value_loss = F.mse_loss(pred_value, targ_value.detach())
+
+        ## optimizer take step
+        self.critic_optimizer.zero_grad()
+        value_loss.backward()
+        self.critic_optimizer.step()
+        self.critic_scheduler.step()
+
+        # update actor (policy network)
+        # 64,1
+        advantage = (targ_value - pred_value).detach()  # not backpropagated
+
+        # refer to https://pytorch.org/docs/stable/distributions.html
+        # 64,3
+        probs = self.actor(cv_s) # cv_s
         
-        return
+        if batch_mode:
+            # 64, 64
+            log_prob = Categorical(probs).log_prob(a+1) # add one back becase our a~[-1,0,1]
+        else:
+            log_prob = Categorical(probs).log_prob(torch.tensor(a+1)) # add one back becase our a~[-1,0,1]
+
+        policy_loss = - advantage * log_prob.unsqueeze(-1)
+        entropy_loss = self.entropy_weight * -log_prob.unsqueeze(-1)  # entropy maximization
+
+        # update policy
+        self.actor_optimizer.zero_grad()
+        (policy_loss + entropy_loss).mean().backward()
+        self.actor_optimizer.step()
+        self.actor_scheduler.step()
+
+        return (value_loss + policy_loss + entropy_loss).data

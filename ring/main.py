@@ -1,11 +1,11 @@
 import numpy as np
-import random, time
+import random, timeit
 import torch
-import torch.nn.functional as F
-from torch.distributions import Categorical
 
-import agent, curbside, envs, utils
+import agent, memory, utils, simulation
 
+torch.manual_seed(0)
+np.random.seed(0)
 random.seed(0)
 
 NET_XML = "ring.net.xml"
@@ -14,56 +14,42 @@ ROU_XML = "ring.trips.xml"
 
 def main():
 
-    id_list = ['P01', 'P12', 'P23', 'P30']
+    utils.generate_route(length=3600, park2curb=1, background2park=0, cv2ncv_pf=2, cv2ncv_pd=0.33)
+
+    Model = agent.A2C(
+        batch_size=64,
+        learning_rate=0.001,
+        gamma=0.95
+    )
+
+    Memory = memory.Memory(
+        10000,
+        50
+    )
+
+    Simulation = simulation.Simulation(
+        Model, 
+        Memory,
+        training_epochs=3
+    )
+
+    total_episodes = 40
+    episode = 0
+    timestamp_start = timeit.default_timer()
     
-    utils.generate_route(park2curb=1, background2park=1, cv2ncv_pf=1, cv2ncv_pd=0.5)
-    env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=10, gui=True)
+    while episode < total_episodes:
 
-    curb_agents = {k : agent.A2C() for k in id_list} 
-    s = env._get_state()
+        print('\n----- Episode', str(episode+1), 'of', str())
+        # epsilon = 1.0 - (episode / config['total_episodes'])
+        simulation_time, training_time = Simulation.run(episode) # epsilon
+        print('Simulation time:', simulation_time, 's - Training time:', training_time, 's - Total:', round(simulation_time+training_time, 1), 's')
+        episode += 1
 
-    for epoch in range(10):
+    print("\n----- Start time:", timestamp_start)
+    print("----- End time:", timeit.default_timer())
 
-        res = 0
-
-        while env.sim.simulation.getMinExpectedNumber() > 0:
-
-            # can test with [0,0,0,0] actions for fixed curb spaces
-            # actions = [0,0,0,0]
-
-            actions = []
-
-            for i in range(len(id_list)):
-                id = id_list[i]
-                policies, _ = curb_agents[id].forward(s[i])
-
-                probs = F.softmax(policies, dim=0)
-                a = Categorical(probs).sample() - 1
-
-                actions.append(a)
-
-            # state is vector of 8 elements: full_arrival, cv_arrival, full_avg_reroute, cv_avg_reroute, cv_occ, ncv_occ, cv_cap, ncv_cap
-            # reward is tuple of 2 elements: full_rereuote, cv_reroute
-            # depends on agent design, can use different elements for training
-
-            s_prime, r = env.batch(actions)
-            #     res += sum([item[0] for item in r])          
-
-            #     for i in range(len(id_list)):
-            #         curb_agents[id_list[i]].train(s[i], actions[i], r[i], s_prime[i])
-
-            #     s = s_prime
-
-        env.terminate()
-        time.sleep(2)
-
-        # reset
-        env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=10, gui=True)
-        s = env._get_state()
-        
-        print('Epoch = {}, global reward = {}'.format(epoch, res))
-
-    env.terminate()
+    # print(Memory._size_now())
+    # print("----- Session info saved at:", path)
 
 if __name__ == "__main__":
     main()

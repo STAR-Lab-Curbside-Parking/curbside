@@ -1,15 +1,19 @@
 import random
 import pandas as pd
 import xml.etree.ElementTree as ET
+import torch
+from torch.utils.data import Dataset
 
 random.seed(0)
 
-def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
+def generate_route(length,
+                   park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
                    demand_curve='flat',
                    route_xml='ring.rou.xml'):
     """
     generate route file for simulation
 
+    @params length : int, length of simulation
     @params env : gym env, environment object that has been created and initiated
     @params park2curb : float, ratio of parking traffic to curb space capacities
     @params background2park : float, ratio of background to parking traffic
@@ -23,7 +27,7 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
     random.seed(0)
 
     park_record = []
-    ncv_pd = 60 * 2
+    ncv_pd = 60 * 3
     cv_pd = int(ncv_pd * cv2ncv_pd)
 
     for curb_id in ['P01', 'P12', 'P23', 'P30']:
@@ -31,19 +35,19 @@ def generate_route(park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
         d = "E" + curb_id[1:]
 
         # need to implement demand curve
-        park_demand = 10 * 3600 / max(ncv_pd, cv_pd) * park2curb
+        park_demand = 10 * length / max(ncv_pd, cv_pd) * park2curb
         background_flow = int(park_demand * background2park)
 
         cv_demand = park_demand * cv2ncv_pf / (1 + cv2ncv_pf)
         ncv_demand = park_demand * 1 / (1 + cv2ncv_pf)
 
         for j in range(int(cv_demand)):
-            dt = random.randint(100, 3700)
+            dt = random.randint(100, length+100)
             pt = cv_pd
             park_record.append((dt, curb_id, o, d, pt, 'cv'))
 
         for j in range(int(ncv_demand)):
-            dt = random.randint(100, 3700)
+            dt = random.randint(100, length+100)
             pt = ncv_pd
             park_record.append((dt, curb_id, o, d, pt, 'ncv'))
 
@@ -90,3 +94,75 @@ def is_cv_veh(veh):
     """
     return veh.startswith('cv', 0, 2)
     # return traci.vehicle.getVehicleClass(veh) == 'delivery'
+
+def interpret_state(s):
+    """
+    interpret state returned by simulation environment
+    
+    @params s : list of state elements returned by simulation environment
+
+    @returns full_state, cv_state
+    """
+    full_state = [sum([item[0] for item in s]), sum([item[2] for item in s]), 
+                       sum([item[4] for item in s]), sum([item[5] for item in s]), 
+                       sum([item[6] for item in s]), sum([item[7] for item in s])]
+    cv_state = [sum([item[1] for item in s]), sum([item[3] for item in s]), 
+                sum([item[4] for item in s]), sum([item[5] for item in s]), 
+                sum([item[6] for item in s]), sum([item[7] for item in s])]
+    
+    return full_state, cv_state
+
+def interpret_reward(r):
+    """
+    interpret reward returned by simulation environment
+
+    @params r : tuple of elements, reward returned by simulation environment
+
+    @returns reward : full reward including both cv and non-cv
+    """
+
+    reward = sum([item[0] for item in r])
+
+    return reward
+
+class transform(object):
+
+    def __call__(self, sample):
+        """
+        transform
+        """
+        res = []
+
+        # state, action, reward, new_state
+        res.append(interpret_state(sample[0]))
+        res.append(sample[1])
+
+        # reward is already interpreted outside before
+        # res.append(interpret_reward(sample[2]))
+        res.append(sample[2])
+        res.append(interpret_state(sample[3]))
+
+        return res
+
+class memory_dataset(Dataset):
+    def __init__(self, data, transform=None):
+        """
+        @params samples: list
+        @params transform: Optional transform to be applied on a sample.
+        """
+        self.data = data
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        sample = self.data[idx] # state, action, reward, new_state
+
+        if self.transform is not None:
+            sample = self.transform(sample)
+
+        return sample

@@ -15,7 +15,7 @@ class smart_curb:
     smart curb class: a subclass of general curbside
     """
 
-    def __init__(self, curb_id, capacity=10, cv_cap=5):
+    def __init__(self, curb_id, capacity=10, cv_cap=3):
         """
         initialize instance
         Args:

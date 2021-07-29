@@ -4,6 +4,7 @@ import os, sys
 import curbside
 from utils import is_cv_veh
 
+np.random.seed(0)
 random.seed(0)
 
 if sys.platform == "win32":
@@ -62,7 +63,7 @@ class RingEnv(gym.Env):
 
         curbs = {}
         for curb_id in curb_ids:
-            curbs[curb_id] = curbside.smart_curb(curb_id, 10)
+            curbs[curb_id] = curbside.smart_curb(curb_id, 10, 7)
 
         return curbs
     
@@ -87,18 +88,18 @@ class RingEnv(gym.Env):
         traci.start([sumoBinary, "-c", "ring.sumocfg", "--time-to-teleport", "-1"], label="sim")
         return traci.getConnection("sim")
     
-    def batch(self, actions):
+    def batch(self, action):
         """
         perform control and collect information every batch of seconds
 
         
-        @params actions : dictionary, actions associated with each curb agent, computed outside of the env
+        @params actions : int, in central agent control -1, 0, or 1
 
         @returns state : dictionary, state of each curb agent
         @returns reward : dictionary, reward of each curb agent
         """
         
-        self.control(actions)
+        self.control(action)
 
         for curb_id in self.curbs.keys():
             self.reroute_cnt[(self.TIME//self.WINDOW, curb_id)] = {'cv':0, 'ncv':0}
@@ -116,7 +117,7 @@ class RingEnv(gym.Env):
 
         return state, reward 
     
-    def control(self, actions):
+    def control(self, action):
         """
         perform control of the curbs
         """
@@ -124,15 +125,18 @@ class RingEnv(gym.Env):
         # use this to ensure sequence is matched
         for i in range(len(id_list)):
             curb = self.curbs[id_list[i]]
-            action = actions[i]
-            if action == 1 and curb.ncv_cap > 0 and curb.ncv_occ < curb.ncv_cap:
-                # delivery vehicle space +1
+            # action = actions[i]
+            if action == 1 and curb.ncv_cap > 1 and curb.ncv_occ < curb.ncv_cap:
+                # cv space +1
                 curb.ncv_cap -= 1
                 curb.cv_cap += 1
-            elif action == -1 and curb.cv_cap > 0 and curb.cv_occ < curb.cv_cap:
-                # passenger vehicle space +1
+            elif action == -1 and curb.cv_cap > 1 and curb.cv_occ < curb.cv_cap:
+                # ncv space +1
                 curb.ncv_cap += 1
                 curb.cv_cap -= 1
+            else:
+                # action = 0, do not adjust
+                pass
 
     def _simulate(self):
         """
@@ -262,7 +266,7 @@ class RingEnv(gym.Env):
             cv_avg_reroute = reroute['cv'] / cv_arrival if cv_arrival > 0 else 0 # cv_reroute_veh_cnt
 
             tmp = np.array([# self.TIME//self.WINDOW, 
-                            full_arrival,
+                            full_arrival, 
                             cv_arrival,
                             # average cruising distance by arriving vehicles
                             # critic sees CV + non-CV: cv and ncv
@@ -326,7 +330,7 @@ class RingEnv(gym.Env):
             # reward is calculated of both CV + non-CV: cv and ncv
             # reward.append((curb.full_dist, curb.cv_dist))
             reroute = self.reroute_cnt[((self.TIME-1)//self.WINDOW, i)]
-            reward.append((reroute['cv'] + reroute['ncv'], reroute['cv']))
+            reward.append((- reroute['cv'] - reroute['ncv'], - reroute['cv']))
 
         return reward
 
