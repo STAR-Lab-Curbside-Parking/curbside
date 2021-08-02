@@ -54,14 +54,14 @@ class Simulation:
             # old_a = 0
 
             # max pressure
-            for i in ['P01', 'P12', 'P23', 'P30']:
-                reroute = env.reroute_cnt[((env.TIME-1)//env.WINDOW, i)]
-            if abs(reroute['cv'] - reroute['ncv']) < 2:
-                old_a = 0
-            elif reroute['cv'] > reroute['ncv']:
-                old_a = 1
-            else:
-                old_a = -1
+            # for i in ['P01', 'P12', 'P23', 'P30']:
+            #     reroute = env.reroute_cnt[((env.TIME-1)//env.WINDOW, i)]
+            # if abs(reroute['cv'] - reroute['ncv']) < 2:
+            #     old_a = 0
+            # elif reroute['cv'] > reroute['ncv']:
+            #     old_a = 1
+            # else:
+            #     old_a = -1
 
             new_s, r = env.batch(old_a)
             reward = utils.interpret_reward(r)
@@ -81,12 +81,12 @@ class Simulation:
             res += reward
 
             # uncomment in A2C training
-            # self._Memory.add_sample((old_s, old_a, reward, new_s))
+            self._Memory.add_sample((old_s, old_a, reward, new_s))
 
-            # new_a = self._choose_action(new_s)
+            new_a = self._choose_action(new_s)
 
-            # old_s = new_s
-            # old_a = new_a
+            old_s = new_s
+            old_a = new_a
 
             if early_stop:
                 print("full_arrival", "cv_arrival", "full_avg_reroute", "cv_avg_reroute", "cv_occ", "ncv_occ", "cv_cap", "ncv_cap")
@@ -101,7 +101,7 @@ class Simulation:
         print("Training...")
         start_time = timeit.default_timer()
 
-        # self._replay()
+        self._replay()
 
         training_time = round(timeit.default_timer() - start_time, 1)
         return simulation_time, training_time, res

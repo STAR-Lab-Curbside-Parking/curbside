@@ -30,7 +30,7 @@ def main():
     Model = agent.A2C(
         batch_size=64,
         learning_rate=0.001,
-        gamma=0.95
+        gamma=0.99
     )
 
     Memory = memory.Memory(
@@ -45,31 +45,35 @@ def main():
         cv_cap=args.cap
     )
 
-    total_episodes = 1
+    total_episodes = 16
     episode = 0
     timestamp_start = timeit.default_timer()
     
+    res = []
     while episode < total_episodes:
 
         print('\n----- Episode', str(episode+1), 'of', str())
         # epsilon = 1.0 - (episode / config['total_episodes'])
-        simulation_time, training_time, res = Simulation.run(episode) # epsilon
+        simulation_time, training_time, res_episode = Simulation.run(episode) # epsilon
         print('Simulation time:', simulation_time, 's - Training time:', training_time, 's - Total:', round(simulation_time+training_time, 1), 's')
         episode += 1
+        res.append(res_episode)
 
     print("\n----- Start time:", timestamp_start)
     print("----- End time:", timeit.default_timer())
 
-    # print(Memory._size_now())
+    print(args.flow, args.duration, args.cap, args.seed)
+    print(res)
+
     # print("----- Session info saved at:", path)
-    with open("mp_baseline.txt", "a") as myfile:
-        myfile.write("{},{},{},{},{}\n".format(
-            args.flow,
-            args.duration,
-            args.cap, 
-            args.seed,
-            res
-        ))
+    # with open("mp_baseline.txt", "a") as myfile:
+    #     myfile.write("{},{},{},{},{}\n".format(
+    #         args.flow,
+    #         args.duration,
+    #         args.cap, 
+    #         args.seed,
+    #         res
+    #     ))
 
 if __name__ == "__main__":
     main()
