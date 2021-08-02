@@ -4,10 +4,9 @@ import xml.etree.ElementTree as ET
 import torch
 from torch.utils.data import Dataset
 
-random.seed(0)
-
 def generate_route(length,
                    park2curb, background2park, cv2ncv_pf, cv2ncv_pd,
+                   seed,
                    demand_curve='flat',
                    route_xml='ring.rou.xml'):
     """
@@ -24,11 +23,11 @@ def generate_route(length,
     @return 
     """
     
-    random.seed(0)
+    random.seed(seed)
 
     park_record = []
     ncv_pd = 60 * 3
-    cv_pd = int(ncv_pd * cv2ncv_pd)
+    cv_pd = int(round(ncv_pd * cv2ncv_pd))
 
     for curb_id in ['P01', 'P12', 'P23', 'P30']:
         o = "A" + curb_id[1]
@@ -41,12 +40,12 @@ def generate_route(length,
         cv_demand = park_demand * cv2ncv_pf / (1 + cv2ncv_pf)
         ncv_demand = park_demand * 1 / (1 + cv2ncv_pf)
 
-        for j in range(int(cv_demand)):
+        for j in range(int(round(cv_demand))):
             dt = random.randint(100, length+100)
             pt = cv_pd
             park_record.append((dt, curb_id, o, d, pt, 'cv'))
 
-        for j in range(int(ncv_demand)):
+        for j in range(int(round(ncv_demand))):
             dt = random.randint(100, length+100)
             pt = ncv_pd
             park_record.append((dt, curb_id, o, d, pt, 'ncv'))

@@ -18,11 +18,13 @@ ROU_XML = "ring.trips.xml"
 
 
 class Simulation:
-    def __init__(self, Model, Memory, training_epochs):
+    def __init__(self, Model, Memory, training_epochs, cv_cap):
         self._Model = Model
         self._Memory = Memory
 
         self._training_epochs = training_epochs
+
+        self.cv_cap = cv_cap
 
     def run(self, episode):
         """
@@ -35,7 +37,8 @@ class Simulation:
         GUI = False
         # if episode == 2:
         #     GUI = True
-        env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=30, gui=GUI)
+        env = envs.RingEnv(NET_XML, ADD_XML, ROU_XML, window=30, gui=GUI, 
+                           cv_cap=self.cv_cap)
         early_stop = False
 
         old_s = env._get_state()
@@ -47,7 +50,19 @@ class Simulation:
             # state is list of 8 elements: full_arrival, cv_arrival, full_avg_reroute, cv_avg_reroute, cv_occ, ncv_occ, cv_cap, ncv_cap
             # reward is tuple of 2 elements: full_reroute, cv_reroute
 
-            old_a = 0
+            # fixed control
+            # old_a = 0
+
+            # max pressure
+            for i in ['P01', 'P12', 'P23', 'P30']:
+                reroute = env.reroute_cnt[((env.TIME-1)//env.WINDOW, i)]
+            if abs(reroute['cv'] - reroute['ncv']) < 2:
+                old_a = 0
+            elif reroute['cv'] > reroute['ncv']:
+                old_a = 1
+            else:
+                old_a = -1
+
             new_s, r = env.batch(old_a)
             reward = utils.interpret_reward(r)
 
@@ -58,18 +73,20 @@ class Simulation:
                 early_stop = True
             
             # penalize beyond-boundary attempts
-            # cap
+            # but this is probably not right
             # if sum([env.curbs[i].cv_cap + old_a < env.curbs[i].cv_occ or env.curbs[i].ncv_cap + old_a < env.curbs[i].ncv_occ \
             #     for i in ['P01', 'P12', 'P23', 'P30']]) > 0:
             #     reward = -1000
 
             res += reward
-            self._Memory.add_sample((old_s, old_a, reward, new_s))
 
-            new_a = self._choose_action(new_s)
+            # uncomment in A2C training
+            # self._Memory.add_sample((old_s, old_a, reward, new_s))
 
-            old_s = new_s
-            old_a = new_a
+            # new_a = self._choose_action(new_s)
+
+            # old_s = new_s
+            # old_a = new_a
 
             if early_stop:
                 print("full_arrival", "cv_arrival", "full_avg_reroute", "cv_avg_reroute", "cv_occ", "ncv_occ", "cv_cap", "ncv_cap")
@@ -87,7 +104,7 @@ class Simulation:
         # self._replay()
 
         training_time = round(timeit.default_timer() - start_time, 1)
-        return simulation_time, training_time
+        return simulation_time, training_time, res
 
     def _choose_action(self, state):
 

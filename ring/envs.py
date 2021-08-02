@@ -22,7 +22,7 @@ import traci
 
 class RingEnv(gym.Env):
     
-    def __init__(self, net_xml, add_xml, rou_xml, window=10, gui=False):
+    def __init__(self, net_xml, add_xml, rou_xml, window=10, gui=False, cv_cap=1):
         """
         initialization of object
 
@@ -40,6 +40,7 @@ class RingEnv(gym.Env):
         self.ROU_XML = rou_xml
         self.WINDOW = window
         self.GUI = gui
+        self.cv_cap = cv_cap
         
         self.TIME = 0
 
@@ -63,7 +64,7 @@ class RingEnv(gym.Env):
 
         curbs = {}
         for curb_id in curb_ids:
-            curbs[curb_id] = curbside.smart_curb(curb_id, 10, 7)
+            curbs[curb_id] = curbside.smart_curb(curb_id, 10, self.cv_cap)
 
         return curbs
     
