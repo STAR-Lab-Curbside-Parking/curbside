@@ -35,21 +35,51 @@ During our exploration, we found that there are many uncertainties in the **Seat
 
 Answering these questions, we built a simple set-up that is more configurable and faster for algorithm testing. And this is **ring** subfolder.
 
+A naive curb control problem with one agent for each curb is depicted as follows. The agent make observations of the environment and the control the curb - adjust space allocation for different vehicle types to fully utilize its infrastructure. But this will lead to a MARL problem if we are looking at a system of curbs.
+
+![demo](./ring/fig/demo.png)
+
+To solve a reasonably sized problem, we look at a blockface of 4 curbs. The vehicles can only go forward or turn right in this setting. The agent controls the 4 curbs synchronously - apply the same action (one of -1, 0, 1) to all four curbs.
+- action -1 means decrase space allocation for CVs by one unit. Correspondingly, the spaces allocated for non-CVs will increase by 1.
+- action 0 means no adjustment on the allocation
+
+![blockface](./ring/fig/blockface.png)
+
+Programming everything in SUMO, it looks like the following. To start some thing from simple, we also assume the input parking demand are identical for the four curbs and they are generated uniformly throughout the simulation 3600s. Input at the four curbs are identical as well.
+
+![simulation](./ring/fig/simulation.png)
+
+We also tested two baselines
++ no-action: the agent always executes action **0** - does not change allocation in any of the four curbs
++ max-pressure: computes the parking failure rate of CVs and non-CVs in the past window, and adjusts in favor of the group that had higher rate of failure
+
+
 This environment has the latest efforts. Its file system is similar to those in the **seattle-demo**.
 + XMLs: define the SUMO simulation
 + Python: more detailed comments are in the files.
-    - `main.py`: main iteration
-    - `utils.py`: functions that prepare for simulation, e.g., route generation.
-    - `envs.py`: defines the physical world - how vehicles move, request parking, are rejected and rerouted.
-        * `curbside.py`: class of **smart curb**s, that we are controlling.
-    - `agent.py`: could be a place where RL agnets are defined
+    - `baseline.sh`: shell script that calls `main.py` via commandline for different combinations of variables
+    - `main.py`: main iteration, receives commandline arg for parameter values
+    - `agent.py`: where RL agnets are defined
+    - `simulation.py`: provides the interface between physical env and learning. The agent follows the policy for an episode and after the simulation ends, learn from the experience replay buffer
+        - `envs.py`: defines the physical world - how vehicles move, request parking, are rejected and rerouted.
+                + `curbside.py`: class of **smart curb**s that we are controlling.
+    - `memory.py`: create replay buffer class
+    - `utils.py`: (1) functions preparing the simulation, e.g., route generation; (2) state and reward interpretation and summary; and (3) create dataloader to facilitate learning for Pytorch in batches.
++ fig
+    - all kinds of figures for demonstration and result presentation.
+    
 ```bash
 main.py
-|-- envs.py
-|   |
-|   |-- curbside.py
 |
 |-- agent.py
+|
+|-- simulation.py
+|   |
+    |-- envs.py
+        |
+        |-- curbside.py
+|
+|-- memory.py
 |
 |-- utils.py
 ```
