@@ -37,17 +37,17 @@ Answering these questions, we built a simple set-up that is more configurable an
 
 A naive curb control problem with one agent for each curb is depicted as follows. The agent make observations of the environment and the control the curb - adjust space allocation for different vehicle types to fully utilize its infrastructure. But this will lead to a MARL problem if we are looking at a system of curbs.
 
-![demo](./ring/fig/demo.png)
+<img src="./ring/fig/demo.png" width="400">
 
 To solve a reasonably sized problem, we look at a blockface of 4 curbs. The vehicles can only go forward or turn right in this setting. The agent controls the 4 curbs synchronously - apply the same action (one of -1, 0, 1) to all four curbs.
 - action -1 means decrase space allocation for CVs by one unit. Correspondingly, the spaces allocated for non-CVs will increase by 1.
 - action 0 means no adjustment on the allocation
 
-![blockface](./ring/fig/blockface.png)
+<img src="./ring/fig/blockface.png" width="400">
 
 Programming everything in SUMO, it looks like the following. To start some thing from simple, we also assume the input parking demand are identical for the four curbs and they are generated uniformly throughout the simulation 3600s. Input at the four curbs are identical as well.
 
-![simulation](./ring/fig/simulation.png)
+<img src="./ring/fig/simulation.png" width="400">
 
 We also tested two baselines
 + no-action: the agent always executes action **0** - does not change allocation in any of the four curbs
