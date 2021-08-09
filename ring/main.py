@@ -66,14 +66,14 @@ def main():
     print(res)
 
     # print("----- Session info saved at:", path)
-    # with open("mp_baseline.txt", "a") as myfile:
-    #     myfile.write("{},{},{},{},{}\n".format(
-    #         args.flow,
-    #         args.duration,
-    #         args.cap, 
-    #         args.seed,
-    #         res
-    #     ))
+    with open("a2c.txt", "a") as myfile:
+        myfile.write("{},{},{},{},{}\n".format(
+            args.flow,
+            args.duration,
+            args.cap, 
+            args.seed,
+            res
+        ))
 
 if __name__ == "__main__":
     main()
